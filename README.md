@@ -1,6 +1,5 @@
 # InfiniSTG
-
-< React Jam Spring 2024 (https://reactjam.com)
+> React Jam Spring 2024 (https://reactjam.com)
 
 ## Description
 
