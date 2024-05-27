@@ -12,6 +12,7 @@
   "dependencies": {
     "@pixi/math-extras": "^7.4.2",
     "@pixi/react": "^7.1.0",
+    "@pixi/tilemap": "^4.1.0",
     "pixi.js": "^7.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
