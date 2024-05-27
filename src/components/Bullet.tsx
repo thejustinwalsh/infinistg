@@ -13,18 +13,16 @@ type BulletProps = Omit<SpriteProps, 'texture'> & {
   texture: Texture;
 };
 
-const Bullet = function Bullet({index, texture}: BulletProps) {
+export default function Bullet({index, texture}: BulletProps) {
   const ref = useRef<SpriteRef>(null);
   const actions = useGameState(state => state.actions);
   const bullet = actions.get('bullets', index) as BulletState; // TODO: Fix this type
 
   useTick(() => {
     if (ref.current) {
-      ref.current.position.set(bullet.pos[0], bullet.pos[1]);
+      ref.current.position.set(bullet.pos.x, bullet.pos.y);
     }
   });
 
-  return <Sprite ref={ref} anchor={0.5} x={bullet.pos[0]} y={bullet.pos[1]} texture={texture} />;
-};
-
-export default Bullet;
+  return <Sprite ref={ref} anchor={0.5} x={bullet.pos.x} y={bullet.pos.y} texture={texture} />;
+}

@@ -18,7 +18,7 @@ export default function Title() {
     actions.reset(),
       actions.add('players', {
         texture: 'ship-1',
-        pos: [WIDTH / 2, HEIGHT / 2],
+        pos: {x: WIDTH / 2, y: HEIGHT / 2},
         radius: 16,
         health: 100,
         maxHealth: 100,
@@ -32,7 +32,7 @@ export default function Title() {
       console.log('Adding player');
       actions.add('players', {
         texture: 'ship-1',
-        pos: [WIDTH / 2, HEIGHT / 2],
+        pos: {x: WIDTH / 2, y: HEIGHT / 2},
         radius: 16,
         health: 100,
         maxHealth: 100,

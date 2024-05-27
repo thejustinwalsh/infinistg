@@ -15,7 +15,7 @@ export type StatePool<T> = {
 
 export type SceneObjectState = {
   id?: number;
-  pos: [x: number, y: number];
+  pos: {x: number; y: number};
   radius: number;
   texture?: string;
 };
@@ -58,7 +58,7 @@ export type GameStateAction = {
 export const useGameState = create<GameState>((set, get) => ({
   players: {
     pool: Array<EntityState>(MAX_PLAYERS).fill({
-      pos: [-WIDTH, -HEIGHT],
+      pos: {x: -WIDTH, y: -HEIGHT},
       radius: 0,
       fireRate: 0,
       health: 0,
@@ -68,7 +68,7 @@ export const useGameState = create<GameState>((set, get) => ({
   },
   enemies: {
     pool: Array<EntityState>(MAX_ENEMIES).fill({
-      pos: [-WIDTH, -HEIGHT],
+      pos: {x: -WIDTH, y: -HEIGHT},
       radius: 0,
       fireRate: 0,
       health: 0,
@@ -78,7 +78,7 @@ export const useGameState = create<GameState>((set, get) => ({
   },
   bullets: {
     pool: Array<BulletState>(MAX_BULLETS).fill({
-      pos: [-WIDTH, -HEIGHT],
+      pos: {x: -WIDTH, y: -HEIGHT},
       dir: 0,
       radius: 0,
       speed: 0,

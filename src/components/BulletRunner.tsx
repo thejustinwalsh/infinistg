@@ -21,19 +21,20 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
   useTick(delta => {
     for (let i = 0; i < bullets.active; i++) {
       const bullet = bullets.pool[i];
-      bullet.pos[0] += bullet.speed * Math.cos(bullet.dir - Math.PI / 2) * delta;
-      bullet.pos[1] += bullet.speed * Math.sin(bullet.dir - Math.PI / 2) * delta;
+      bullet.pos.x += bullet.speed * Math.cos(bullet.dir - Math.PI / 2) * delta;
+      bullet.pos.y += bullet.speed * Math.sin(bullet.dir - Math.PI / 2) * delta;
       bullet.delta += delta;
 
       if (
         bullet.delta > bullet.lifetime ||
-        bullet.pos[0] < -texture.width ||
-        bullet.pos[0] > WIDTH + texture.width ||
-        bullet.pos[1] < -texture.height ||
-        bullet.pos[1] > HEIGHT + texture.height
+        bullet.pos.x < -texture.width ||
+        bullet.pos.x > WIDTH + texture.width ||
+        bullet.pos.y < -texture.height ||
+        bullet.pos.y > HEIGHT + texture.height
       ) {
         bullet.delta = bullet.lifetime = 0;
-        bullet.pos = [-WIDTH, -HEIGHT];
+        bullet.pos.x = -WIDTH;
+        bullet.pos.y = -HEIGHT;
         actions.remove('bullets', i);
       }
     }
@@ -42,7 +43,7 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
   return (
     <Container>
       {actions.map('bullets', (bullet, index) => (
-        <Bullet key={bullet.id ?? index} index={index} texture={texture} x={bullet.pos[0]} y={bullet.pos[1]} />
+        <Bullet key={bullet.id ?? index} index={index} texture={texture} x={bullet.pos.x} y={bullet.pos.y} />
       ))}
     </Container>
   );

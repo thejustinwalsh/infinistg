@@ -8,6 +8,8 @@ import {BACKGROUND_COLOR, HEIGHT, WIDTH} from './lib/constants';
 import Game from './routes/Game';
 import Title from './routes/Title';
 
+import '@pixi/math-extras';
+
 // Default global pixi settings
 BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
 settings.ROUND_PIXELS = true;
