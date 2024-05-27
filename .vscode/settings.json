@@ -10,7 +10,8 @@
     "Tilemap",
     "tilesets",
     "tilewidth",
-    "zustand"
+    "zustand",
+    "zzfx"
   ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,

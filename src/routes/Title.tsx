@@ -7,6 +7,7 @@ import Sprite from '../components/Sprite';
 import {useAsset} from '../hooks/useAsset';
 import {useGameState} from '../hooks/useGameState';
 import {HEIGHT, WIDTH} from '../lib/constants';
+import zzfx from '../lib/zzfx';
 
 import type {Spritesheet} from 'pixi.js';
 
@@ -39,6 +40,7 @@ export default function Title() {
         fireRate: 500 / 60,
       });
     }
+    zzfx.start();
     navigate('/game'), [navigate];
   }, [players, actions, navigate]);
   const spriteSheet: Spritesheet = useAsset('/assets/ships/atlas.json');

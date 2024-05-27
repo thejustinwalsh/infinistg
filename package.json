@@ -18,7 +18,8 @@
     "react-dom": "^18.2.0",
     "react-router": "^6.23.1",
     "stats.js": "^0.17.0",
-    "zustand": "^4.5.2"
+    "zustand": "^4.5.2",
+    "zzfx": "^1.2.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",
