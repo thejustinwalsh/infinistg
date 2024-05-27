@@ -73,14 +73,12 @@ export default function TileMap({tileMap}: TileMapProps) {
 
         const tileX = (tile - 1) % (tileSetData.imagewidth / tileWidth);
         const tileY = Math.floor((tile - 1) / (tileSetData.imagewidth / tileWidth));
-        if (ref.current) {
-          ref.current.tile(tiles, (i % width) * tileWidth, Math.floor(i / width) * tileHeight, {
-            u: tileX * tileWidth,
-            v: tileY * tileHeight,
-            tileWidth,
-            tileHeight,
-          });
-        }
+        ref.current?.tile(tiles, (i % width) * tileWidth, Math.floor(i / width) * tileHeight, {
+          u: tileX * tileWidth,
+          v: tileY * tileHeight,
+          tileWidth,
+          tileHeight,
+        });
       }
     });
   }, [tileMapData.layers, tileSetData.imagewidth, tileSetData.tileheight, tileSetData.tilewidth, tiles]);

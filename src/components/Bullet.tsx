@@ -19,9 +19,7 @@ export default function Bullet({index, texture}: BulletProps) {
   const bullet = actions.get('bullets', index) as BulletState; // TODO: Fix this type
 
   useTick(() => {
-    if (ref.current) {
-      ref.current.position.set(bullet.pos.x, bullet.pos.y);
-    }
+    ref.current?.position.set(bullet.pos.x, bullet.pos.y);
   });
 
   return <Sprite ref={ref} anchor={0.5} x={bullet.pos.x} y={bullet.pos.y} texture={texture} />;
