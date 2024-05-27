@@ -1,0 +1,54 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "level-1.json": {
+            "scale": 1.0362037037037037,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 135.59109999106423,
+                "y": 271.6647305870789
+            }
+        },
+        "level-1.tmx": {
+            "scale": 1.03,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 121.84466019417474,
+                "y": 278.15533980582524
+            }
+        },
+        "marble-tiles.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        }
+    },
+    "last.exportedFilePath": "/Users/tjw/Developer/infinistg/public/data",
+    "last.imagePath": "/Users/tjw/Developer/infinistg/public/assets/tiles",
+    "lastUsedTilesetExportFilter": "JSON tileset files (*.tsj *.json)",
+    "map.height": 30,
+    "map.lastUsedExportFilter": "JSON map files (*.tmj *.json)",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 18,
+    "map.tileWidth": 18,
+    "map.width": 15,
+    "openFiles": [
+    ],
+    "project": "tilemaps.tiled-project",
+    "recentFiles": [
+        "level-1.json",
+        "marble-tiles.tsx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.margin": 0,
+    "tileset.spacing": 0,
+    "tileset.tileSize": {
+        "height": 18,
+        "width": 18
+    }
+}

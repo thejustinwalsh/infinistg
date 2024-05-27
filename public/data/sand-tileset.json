@@ -1,0 +1,14 @@
+{ "columns":9,
+ "image":"..\/assets\/tiles\/sand_packed.png",
+ "imageheight":162,
+ "imagewidth":162,
+ "margin":0,
+ "name":"sand-tileset",
+ "spacing":0,
+ "tilecount":81,
+ "tiledversion":"1.10.2",
+ "tileheight":18,
+ "tilewidth":18,
+ "type":"tileset",
+ "version":"1.10"
+}

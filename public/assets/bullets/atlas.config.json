@@ -1,4 +1,5 @@
 {
   "name": "atlas",
-  "format": "pixi"
+  "format": "pixi",
+  "padding": 4
 }
