@@ -1,5 +1,17 @@
 {
-  "cSpell.words": ["pixi", "Spritesheet", "zustand"],
+  "cSpell.words": [
+    "firstgid",
+    "imageheight",
+    "imagewidth",
+    "pixi",
+    "Spritesheet",
+    "tilecount",
+    "tileheight",
+    "Tilemap",
+    "tilesets",
+    "tilewidth",
+    "zustand"
+  ],
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
