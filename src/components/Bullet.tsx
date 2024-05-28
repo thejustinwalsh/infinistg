@@ -9,14 +9,14 @@ import type {BulletState} from '../hooks/useGameState';
 import type {Texture} from 'pixi.js';
 
 type BulletProps = Omit<SpriteProps, 'texture'> & {
-  index: number;
+  id: number;
   texture: Texture;
 };
 
-export default function Bullet({index, texture}: BulletProps) {
+export default function Bullet({id, texture}: BulletProps) {
   const ref = useRef<SpriteRef>(null);
   const actions = useGameState(state => state.actions);
-  const bullet = actions.get('bullets', index) as BulletState; // TODO: Fix this type
+  const bullet = actions.get('bullets', id) as BulletState; // TODO: Fix this type
 
   useTick(() => {
     ref.current?.position.set(bullet.pos.x, bullet.pos.y);

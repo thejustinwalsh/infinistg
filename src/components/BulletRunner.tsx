@@ -19,8 +19,9 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
   const texture = spriteSheet.textures['bullet-1'];
 
   useTick(delta => {
-    for (let i = 0; i < bullets.active; i++) {
-      const bullet = bullets.pool[i];
+    for (let i = 0; i < bullets.count; i++) {
+      const id = bullets.pool.activeEntities[i];
+      const bullet = bullets.pool.entities[bullets.pool.activeEntities[i]];
       bullet.pos.x += bullet.speed * Math.cos(bullet.dir - Math.PI / 2) * delta;
       bullet.pos.y += bullet.speed * Math.sin(bullet.dir - Math.PI / 2) * delta;
       bullet.delta += delta;
@@ -35,15 +36,15 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
         bullet.delta = bullet.lifetime = 0;
         bullet.pos.x = -WIDTH;
         bullet.pos.y = -HEIGHT;
-        actions.remove('bullets', i);
+        actions.remove('bullets', id);
       }
     }
   });
 
   return (
     <Container>
-      {actions.map('bullets', (bullet, index) => (
-        <Bullet key={bullet.id ?? index} index={index} texture={texture} x={bullet.pos.x} y={bullet.pos.y} />
+      {actions.map('bullets', bullet => (
+        <Bullet key={bullet.id} id={bullet.id ?? -1} texture={texture} x={bullet.pos.x} y={bullet.pos.y} />
       ))}
     </Container>
   );

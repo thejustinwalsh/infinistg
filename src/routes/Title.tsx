@@ -29,7 +29,7 @@ export default function Title() {
 
   // TODO: Multiplayer?
   const handlePointerDown = useCallback(() => {
-    if (players.active === 0) {
+    if (players.count === 0) {
       console.log('Adding player');
       actions.add('players', {
         texture: 'ship-1',
