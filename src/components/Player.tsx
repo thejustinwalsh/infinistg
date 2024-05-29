@@ -21,7 +21,7 @@ export default function Player({id, atlas, texture}: PlayerProps) {
   const app = useApp();
   const ref = useRef<SpriteRef>(null);
   const players = useGameState(state => state.players);
-  const bullets = useGameState(state => state.bullets);
+  const bullets = useGameState.getState().bullets;
   const spriteSheet: Spritesheet = useAsset(atlas);
 
   const player = players.actions.get(id);

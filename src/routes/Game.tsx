@@ -13,10 +13,10 @@ import type {CollisionPairs} from '../hooks/useGameState';
 const spatialHash = SpatialHash<{pool: string; id: number; x: number; y: number; width: number; height: number}>(32);
 
 export default function Game() {
-  const players = useGameState(state => state.players);
-  const enemies = useGameState(state => state.enemies);
-  const bullets = useGameState(state => state.bullets);
-  const collision = useGameState(state => state.collision);
+  const players = useGameState.getState().players;
+  const enemies = useGameState.getState().enemies;
+  const bullets = useGameState.getState().bullets;
+  const collision = useGameState.getState().collision;
 
   useTickGroup(TickGroup.POST_TICK, () => {
     const collisions: CollisionPairs = [];
