@@ -2,9 +2,18 @@ import {useEffect, useRef} from 'react';
 import {useApp} from '@pixi/react';
 import {UPDATE_PRIORITY} from 'pixi.js';
 
-type Callback = (delta: number) => void;
+export type Callback = (delta: number) => void;
+export enum TickGroup {
+  PRE_TICK = 'pre',
+  POST_TICK = 'post',
+}
 
-export function usePostTick(callback: Callback, enabled = true) {
+const priority: {[key in TickGroup]: UPDATE_PRIORITY} = {
+  [TickGroup.PRE_TICK]: UPDATE_PRIORITY.INTERACTION,
+  [TickGroup.POST_TICK]: UPDATE_PRIORITY.UTILITY,
+};
+
+export function useTickGroup(group: TickGroup, callback: Callback, enabled = true) {
   const app = useApp();
   const callbackRef = useRef<Callback | null>(null);
 
@@ -15,7 +24,7 @@ export function usePostTick(callback: Callback, enabled = true) {
   useEffect(() => {
     if (enabled) {
       const tick = (delta: number) => callbackRef.current?.apply(app.ticker, [delta]);
-      app.ticker.add(tick, undefined, UPDATE_PRIORITY.LOW);
+      app.ticker.add(tick, undefined, priority[group]);
 
       return () => {
         if (app.ticker) {
@@ -23,5 +32,5 @@ export function usePostTick(callback: Callback, enabled = true) {
         }
       };
     }
-  }, [enabled, app.ticker]);
+  }, [enabled, app.ticker, group]);
 }
