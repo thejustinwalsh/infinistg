@@ -6,12 +6,12 @@ import TileMap from '../components/TileMap';
 import {useGameState} from '../hooks/useGameState';
 
 export default function Game() {
-  const actions = useGameState(state => state.actions);
+  const players = useGameState(state => state.players);
 
   return (
     <Container>
       <TileMap tileMap="/data/level-1.json" />
-      {actions.map('players', (player, index) => (
+      {players.actions.map((player, index) => (
         <Player key={index} id={index} atlas="/assets/ships/atlas.json" texture={player.texture ?? 'ship-1'} />
       ))}
       <BulletRunner atlas="/assets/bullets/atlas.json" />

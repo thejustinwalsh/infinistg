@@ -14,7 +14,23 @@ export type StatePool<T> = {
     activeEntities: number[];
     ids: number[];
   };
+  actions: {
+    add: (entity: T) => void;
+    remove: (index: number) => void;
+    get: (index: number) => T;
+    map: <U>(fn: (entity: T, index: number) => U) => U[];
+  };
   count: number;
+};
+
+export type CollisionPairs = {
+  target: CollisionEntityKey;
+  instigator: CollisionEntityKey;
+}[];
+
+export type CollisionEntityKey = {
+  pool: GameStateEntityPoolKeys;
+  id: number;
 };
 
 export type SceneObjectState = {
@@ -42,11 +58,8 @@ export type GameState = {
   players: StatePool<EntityState>;
   enemies: StatePool<EntityState>;
   bullets: StatePool<BulletState>;
+  collisions: CollisionPairs[];
   actions: {
-    add: (pool: GameStateEntityPoolKeys, entity: GameStateEntity) => void;
-    remove: (pool: GameStateEntityPoolKeys, index: number) => void;
-    get: (pool: GameStateEntityPoolKeys, index: number) => GameStateEntity;
-    map: <U>(pool: GameStateEntityPoolKeys, fn: (entity: GameStateEntity, index: number) => U) => U[];
     reset: () => void;
   };
 };
@@ -61,6 +74,14 @@ export type GameStateAction = {
 
 export const useGameState = create<GameState>((set, get) => ({
   players: {
+    actions: {
+      add: (entity: EntityState) =>
+        set(state => ({...state, players: {...state.players, count: addTo(state.players, entity)}})),
+      remove: (entity: number | EntityState) =>
+        set(state => ({...state, players: {...state.players, count: removeFrom(state.players, entity)}})),
+      get: (index: number) => getFrom(get().players, index),
+      map: <U>(fn: (entity: EntityState, index: number) => U) => mapFrom(get().players, fn),
+    },
     pool: {
       entities: Array<EntityState>(MAX_PLAYERS).fill({
         pos: {x: -WIDTH, y: -HEIGHT},
@@ -77,6 +98,14 @@ export const useGameState = create<GameState>((set, get) => ({
     count: 0,
   },
   enemies: {
+    actions: {
+      add: (entity: EntityState) =>
+        set(state => ({...state, enemies: {...state.enemies, count: addTo(state.enemies, entity)}})),
+      remove: (entity: number | EntityState) =>
+        set(state => ({...state, enemies: {...state.enemies, count: removeFrom(state.enemies, entity)}})),
+      get: (index: number) => getFrom(get().enemies, index),
+      map: <U>(fn: (entity: EntityState, index: number) => U) => mapFrom(get().enemies, fn),
+    },
     pool: {
       entities: Array<EntityState>(MAX_ENEMIES).fill({
         pos: {x: -WIDTH, y: -HEIGHT},
@@ -93,6 +122,14 @@ export const useGameState = create<GameState>((set, get) => ({
     count: 0,
   },
   bullets: {
+    actions: {
+      add: (entity: BulletState) =>
+        set(state => ({...state, bullets: {...state.bullets, count: addTo(state.bullets, entity)}})),
+      remove: (entity: number | BulletState) =>
+        set(state => ({...state, bullets: {...state.bullets, count: removeFrom(state.bullets, entity)}})),
+      get: (index: number) => getFrom(get().bullets, index),
+      map: <U>(fn: (entity: BulletState, index: number) => U) => mapFrom(get().bullets, fn),
+    },
     pool: {
       entities: Array<BulletState>(MAX_BULLETS).fill({
         pos: {x: -WIDTH, y: -HEIGHT},
@@ -110,19 +147,13 @@ export const useGameState = create<GameState>((set, get) => ({
     },
     count: 0,
   },
+  collisions: [],
   actions: {
-    add: (pool: GameStateEntityPoolKeys, entity: GameStateEntity) =>
-      set(state => ({...state, [pool]: {pool: state[pool].pool, count: addTo(state[pool], entity)}})),
-    remove: (pool: GameStateEntityPoolKeys, entity: number | GameStateEntity) =>
-      set(state => ({...state, [pool]: {pool: state[pool].pool, count: removeFrom(state[pool], entity)}})),
-    get: (pool: GameStateEntityPoolKeys, index: number) => getFrom(get()[pool], index),
-    map: <U>(pool: GameStateEntityPoolKeys, fn: (entity: GameStateEntity, index: number) => U) =>
-      mapFrom(get()[pool], fn),
     reset: () => reset(get()),
   },
 }));
 
-function addTo(state: GameStateEntityPools, entity: GameStateEntity): number {
+function addTo<T extends SceneObjectState>(state: StatePool<T>, entity: T): number {
   if (state.pool.ids.length === 0) throw new Error('Pool is full');
 
   const id = state.pool.ids.pop();
@@ -147,7 +178,7 @@ function addTo(state: GameStateEntityPools, entity: GameStateEntity): number {
   return ++state.count;
 }
 
-function removeFrom(state: GameStateEntityPools, entity: number | GameStateEntity) {
+function removeFrom<T extends SceneObjectState>(state: StatePool<T>, entity: number | T): number {
   const id = typeof entity === 'number' ? (entity as number) : entity.id ?? -1;
   if (id < 0 || id >= state.count) throw new Error(`Invalid id (${id}) - last: ${state.count}`);
 
@@ -163,7 +194,7 @@ function removeFrom(state: GameStateEntityPools, entity: number | GameStateEntit
   return --state.count;
 }
 
-function getFrom(state: GameStateEntityPools, id: number) {
+function getFrom<T extends SceneObjectState>(state: StatePool<T>, id: number): T {
   if (id < 0 || id >= state.pool.entities.length) throw new Error(`Invalid id (${id}) - last: ${state.count}`);
 
   return state.pool.entities[id];
@@ -184,7 +215,7 @@ function reset(state: GameState) {
   state.bullets.count = 0;
 }
 
-function mapFrom<U>(state: GameStateEntityPools, fn: (entity: GameStateEntity, id: number) => U): U[] {
+function mapFrom<T extends SceneObjectState, U>(state: StatePool<T>, fn: (entity: T, id: number) => U): U[] {
   const res: U[] = [];
   console.log(state);
   for (let i = 0; i < state.count; i++) {

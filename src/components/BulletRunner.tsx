@@ -12,7 +12,6 @@ type BulletRunnerProps = {
 };
 
 export default function BulletRunner({atlas}: BulletRunnerProps) {
-  const actions = useGameState(state => state.actions);
   const bullets = useGameState(state => state.bullets);
 
   const spriteSheet: Spritesheet = useAsset(atlas);
@@ -36,14 +35,14 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
         bullet.delta = bullet.lifetime = 0;
         bullet.pos.x = -WIDTH;
         bullet.pos.y = -HEIGHT;
-        actions.remove('bullets', id);
+        bullets.actions.remove(id);
       }
     }
   });
 
   return (
     <Container>
-      {actions.map('bullets', bullet => (
+      {bullets.actions.map(bullet => (
         <Bullet key={bullet.id} id={bullet.id ?? -1} texture={texture} x={bullet.pos.x} y={bullet.pos.y} />
       ))}
     </Container>

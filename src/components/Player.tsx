@@ -9,7 +9,6 @@ import {useTickAction} from '../hooks/useTickAction';
 import {HEIGHT, MOVEMENT_SPEED, WIDTH} from '../lib/constants';
 
 import type {SpriteRef} from './Sprite';
-import type {EntityState} from '../hooks/useGameState';
 import type {Spritesheet} from 'pixi.js';
 
 type PlayerProps = {
@@ -21,9 +20,11 @@ type PlayerProps = {
 export default function Player({id, atlas, texture}: PlayerProps) {
   const app = useApp();
   const ref = useRef<SpriteRef>(null);
-  const actions = useGameState(state => state.actions);
-  const player = actions.get('players', id) as EntityState; // TODO: Fix this type
+  const players = useGameState(state => state.players);
+  const bullets = useGameState(state => state.bullets);
   const spriteSheet: Spritesheet = useAsset(atlas);
+
+  const player = players.actions.get(id);
   const sprite = spriteSheet.textures[texture];
   const scale = 2;
 
@@ -46,7 +47,7 @@ export default function Player({id, atlas, texture}: PlayerProps) {
 
   // Fire bullets
   useTickAction(player.fireRate, () => {
-    actions.add('bullets', {
+    bullets.actions.add({
       pos: {x: player.pos.x, y: player.pos.y},
       dir: 0,
       radius: 4,

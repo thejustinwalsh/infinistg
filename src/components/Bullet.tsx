@@ -5,7 +5,6 @@ import Sprite from './Sprite';
 import {useGameState} from '../hooks/useGameState';
 
 import type {SpriteProps, SpriteRef} from './Sprite';
-import type {BulletState} from '../hooks/useGameState';
 import type {Texture} from 'pixi.js';
 
 type BulletProps = Omit<SpriteProps, 'texture'> & {
@@ -15,8 +14,8 @@ type BulletProps = Omit<SpriteProps, 'texture'> & {
 
 export default function Bullet({id, texture}: BulletProps) {
   const ref = useRef<SpriteRef>(null);
-  const actions = useGameState(state => state.actions);
-  const bullet = actions.get('bullets', id) as BulletState; // TODO: Fix this type
+  const bullets = useGameState(state => state.bullets);
+  const bullet = bullets.actions.get(id);
 
   useTick(() => {
     ref.current?.position.set(bullet.pos.x, bullet.pos.y);

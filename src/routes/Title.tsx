@@ -12,12 +12,13 @@ import zzfx from '../lib/zzfx';
 import type {Spritesheet} from 'pixi.js';
 
 export default function Title() {
-  const [players, actions] = useGameState(state => [state.players, state.actions] as const);
+  const actions = useGameState(state => state.actions);
+  const players = useGameState(state => state.players);
   const navigate = useNavigate();
 
   useEffect(() => {
     actions.reset(),
-      actions.add('players', {
+      players.actions.add({
         texture: 'ship-1',
         pos: {x: WIDTH / 2, y: HEIGHT / 2},
         radius: 16,
@@ -25,13 +26,13 @@ export default function Title() {
         maxHealth: 100,
         fireRate: 500 / 60,
       });
-  }, [actions]);
+  }, [actions, players.actions]);
 
   // TODO: Multiplayer?
   const handlePointerDown = useCallback(() => {
     if (players.count === 0) {
       console.log('Adding player');
-      actions.add('players', {
+      players.actions.add({
         texture: 'ship-1',
         pos: {x: WIDTH / 2, y: HEIGHT / 2},
         radius: 16,
@@ -42,7 +43,8 @@ export default function Title() {
     }
     zzfx.start();
     navigate('/game'), [navigate];
-  }, [players, actions, navigate]);
+  }, [players, navigate]);
+
   const spriteSheet: Spritesheet = useAsset('/assets/ships/atlas.json');
   const shipWidth = spriteSheet.textures['ship-1'].width;
 
