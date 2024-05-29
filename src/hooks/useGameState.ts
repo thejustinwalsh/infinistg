@@ -169,34 +169,21 @@ function addTo<T extends SceneObjectState>(state: StatePool<T>, entity: T): numb
   const id = state.pool.ids.pop();
   if (id === undefined) throw new Error('Invalid id');
 
-  console.log(
-    'Adding entity to pool: ',
-    entity,
-    id,
-    state.pool.ids.length,
-    state.pool.activeEntities.length,
-    state.pool.entities.length,
-  );
-
   state.pool.activeEntities.push(id);
-
-  console.log(Object.entries(state.pool.entities[id]));
   state.pool.entities[id] = Object.assign({}, state.pool.entities[id], entity, {id});
-  console.log(Object.entries(state.pool.entities[id]));
-  console.log('Added entity to pool: ', state.pool.entities[id]);
 
   return ++state.count;
 }
 
 function removeFrom<T extends SceneObjectState>(state: StatePool<T>, entity: number | T): number {
   const id = typeof entity === 'number' ? (entity as number) : entity.id ?? -1;
-  if (id < 0 || id >= state.count) throw new Error(`Invalid id (${id}) - last: ${state.count}`);
+  if (id < 0 || id >= state.pool.entities.length) throw new Error(`Invalid id (${id}) - last: ${state.count}`);
 
   state.pool.ids.push(id);
   state.pool.entities[id].id = undefined;
 
   const index = state.pool.activeEntities.indexOf(id);
-  if (index === -1) throw new Error('Invalid index');
+  if (index === -1) throw new Error('Invalid id; Not found.');
 
   state.pool.activeEntities[index] = state.pool.activeEntities[state.count - 1];
   state.pool.activeEntities.pop();
@@ -227,7 +214,6 @@ function reset(state: GameState) {
 
 function mapFrom<T extends SceneObjectState, U>(state: StatePool<T>, fn: (entity: T, id: number) => U): U[] {
   const res: U[] = [];
-  console.log(state);
   for (let i = 0; i < state.count; i++) {
     res[i] = fn(state.pool.entities[state.pool.activeEntities[i]], i);
   }

@@ -18,6 +18,8 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
   const texture = spriteSheet.textures['bullet-1'];
 
   useTick(delta => {
+    const pendingRemoval: number[] = [];
+
     for (let i = 0; i < bullets.count; i++) {
       const id = bullets.pool.activeEntities[i];
       const bullet = bullets.pool.entities[bullets.pool.activeEntities[i]];
@@ -35,9 +37,11 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
         bullet.delta = bullet.lifetime = 0;
         bullet.pos.x = -WIDTH;
         bullet.pos.y = -HEIGHT;
-        bullets.actions.remove(id);
+        pendingRemoval.push(id);
       }
     }
+
+    pendingRemoval.forEach(id => bullets.actions.remove(id));
   });
 
   return (
