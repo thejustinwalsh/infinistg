@@ -210,6 +210,7 @@ function reset(state: GameState) {
     .fill(0)
     .map((_, i) => MAX_BULLETS - 1 - i);
   state.bullets.count = 0;
+  state.collision.pairs = [];
 }
 
 function mapFrom<T extends SceneObjectState, U>(state: StatePool<T>, fn: (entity: T, id: number) => U): U[] {
