@@ -58,7 +58,12 @@ export type GameState = {
   players: StatePool<EntityState>;
   enemies: StatePool<EntityState>;
   bullets: StatePool<BulletState>;
-  collisions: CollisionPairs[];
+  collision: {
+    pairs: CollisionPairs;
+    actions: {
+      set: (pairs: CollisionPairs) => void;
+    };
+  };
   actions: {
     reset: () => void;
   };
@@ -147,7 +152,12 @@ export const useGameState = create<GameState>((set, get) => ({
     },
     count: 0,
   },
-  collisions: [],
+  collision: {
+    pairs: [],
+    actions: {
+      set: (pairs: CollisionPairs) => set(state => ({...state, collision: {...state.collision, pairs}})),
+    },
+  },
   actions: {
     reset: () => reset(get()),
   },
