@@ -1,10 +1,13 @@
-import {useEffect, useRef} from 'react';
+import {forwardRef, useEffect, useImperativeHandle, useRef} from 'react';
+import {type PixiRef} from '@pixi/react';
 
 import {useAsset} from '../hooks/useAsset';
-import CompositeTilemap from '../primitives/CompositeTilemap';
+import Tilemap from '../primitives/Tilemap';
 
-import type {PixiRef} from '@pixi/react';
 import type {Texture} from 'pixi.js';
+import type {Ref} from 'react';
+
+export type TilemapRef = PixiRef<typeof Tilemap>;
 
 export type TileMapData = {
   width: number;
@@ -53,8 +56,10 @@ function relativeTo(source: string, path: string): string {
   return source.replace(/\/(?:.(?!\/))+$/, '/' + path);
 }
 
-export default function TileMap({tileMap}: TileMapProps) {
-  const ref = useRef<PixiRef<typeof CompositeTilemap>>(null);
+const TileMap = forwardRef(function TileMap({tileMap}: TileMapProps, forwardedRef: Ref<TilemapRef>) {
+  const ref = useRef<PixiRef<typeof Tilemap>>(null);
+  useImperativeHandle(forwardedRef, () => ref.current!, []);
+
   const tileMapData: TileMapData = useAsset(tileMap);
   const tileSetData: TileSetData = useAsset(
     url(tileMapData.tilesets[0].source, relativeTo(tileMap, tileMapData.tilesets[0].source.replace('.tsx', '.json'))),
@@ -83,5 +88,7 @@ export default function TileMap({tileMap}: TileMapProps) {
     });
   }, [tileMapData.layers, tileSetData.imagewidth, tileSetData.tileheight, tileSetData.tilewidth, tiles]);
 
-  return <CompositeTilemap ref={ref} tilesets={[tiles.baseTexture]} />;
-}
+  return <Tilemap ref={ref} tilesets={[tiles.baseTexture]} />;
+});
+
+export default TileMap;
