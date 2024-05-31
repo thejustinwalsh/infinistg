@@ -1,4 +1,4 @@
-import {forwardRef, useCallback} from 'react';
+import {forwardRef, useCallback, useImperativeHandle, useRef} from 'react';
 import {Graphics as ReactPixiGraphics, Sprite as ReactPixiSprite} from '@pixi/react';
 
 import ErrorBoundary from './ErrorBoundary';
@@ -30,7 +30,10 @@ const SpriteFromImage = forwardRef(
   },
 );
 
-const Sprite = forwardRef(({image, texture, ...props}: SpriteProps, ref: Ref<SpriteRef>) => {
+const Sprite = forwardRef(function Sprite({image, texture, ...props}: SpriteProps, forwardedRef: Ref<SpriteRef>) {
+  const ref = useRef<SpriteRef>(null);
+  useImperativeHandle(forwardedRef, () => ref.current!, []);
+
   const fallback = useCallback((g: Graphics) => {
     g.clear();
     g.lineStyle(1, 0x000000);

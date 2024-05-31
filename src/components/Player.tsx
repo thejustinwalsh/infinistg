@@ -1,4 +1,4 @@
-import {useRef} from 'react';
+import {forwardRef, useImperativeHandle, useRef} from 'react';
 import {useApp, useTick} from '@pixi/react';
 import {Point} from 'pixi.js';
 
@@ -10,6 +10,7 @@ import {HEIGHT, MOVEMENT_SPEED, WIDTH} from '../lib/constants';
 
 import type {SpriteRef} from './Sprite';
 import type {Spritesheet} from 'pixi.js';
+import type {Ref} from 'react';
 
 type PlayerProps = {
   id: number;
@@ -17,9 +18,11 @@ type PlayerProps = {
   texture: string;
 };
 
-export default function Player({id, atlas, texture}: PlayerProps) {
-  const app = useApp();
+const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, forwardedRef: Ref<SpriteRef>) {
   const ref = useRef<SpriteRef>(null);
+  useImperativeHandle(forwardedRef, () => ref.current!, []);
+
+  const app = useApp();
   const players = useGameState(state => state.players);
   const bullets = useGameState.getState().bullets;
   const spriteSheet: Spritesheet = useAsset(atlas);
@@ -59,4 +62,6 @@ export default function Player({id, atlas, texture}: PlayerProps) {
   });
 
   return <Sprite ref={ref} scale={scale} anchor={0.5} x={player.pos.x} y={player.pos.y} texture={sprite} />;
-}
+});
+
+export default Player;
