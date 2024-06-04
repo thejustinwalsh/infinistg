@@ -4,6 +4,7 @@ import {Point} from 'pixi.js';
 import BulletRunner from '../components/BulletRunner';
 import Player from '../components/Player';
 import ScrollingTilingSprite from '../components/ScrollingTilingSprite';
+import World from '../components/World';
 import {useGameState} from '../hooks/useGameState';
 import {TickGroup, useTickGroup} from '../hooks/useTickGroup';
 import SpatialHash from '../lib/spatial-hash';
@@ -63,6 +64,7 @@ export default function Game() {
   return (
     <Container>
       <ScrollingTilingSprite image={'/assets/backgrounds/bg-1.png'} tilePosition={[0, 0]} scroll={[0, 0.25]} />
+      <World world="/data/world.json" level="Level_1" />
       {players.actions.map((player, index) => (
         <Player key={index} id={index} atlas="/assets/ships/atlas.json" texture={player.texture ?? 'ship-1'} />
       ))}

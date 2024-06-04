@@ -7,7 +7,6 @@ import {Stats} from './components/Stats';
 import {BACKGROUND_COLOR, HEIGHT, WIDTH} from './lib/constants';
 import Game from './routes/Game';
 import Title from './routes/Title';
-
 import '@pixi/math-extras';
 
 // Default global pixi settings
