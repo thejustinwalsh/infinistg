@@ -3,7 +3,7 @@ import {Point} from 'pixi.js';
 
 import BulletRunner from '../components/BulletRunner';
 import Player from '../components/Player';
-import TileMap from '../components/TileMap';
+import ScrollingTilingSprite from '../components/ScrollingTilingSprite';
 import {useGameState} from '../hooks/useGameState';
 import {TickGroup, useTickGroup} from '../hooks/useTickGroup';
 import SpatialHash from '../lib/spatial-hash';
@@ -22,7 +22,7 @@ export default function Game() {
     const collisions: CollisionPairs = [];
     spatialHash.clear();
 
-    // Palyer Bullets vs Enemies
+    // Player Bullets vs Enemies
     bullets.pool.activeEntities.forEach(id => {
       const bullet = bullets.pool.entities[id];
       spatialHash.insert({
@@ -62,7 +62,7 @@ export default function Game() {
 
   return (
     <Container>
-      <TileMap tileMap="/data/level-1.json" />
+      <ScrollingTilingSprite image={'/assets/backgrounds/bg-1.png'} tilePosition={[0, 0]} scroll={[0, 0.25]} />
       {players.actions.map((player, index) => (
         <Player key={index} id={index} atlas="/assets/ships/atlas.json" texture={player.texture ?? 'ship-1'} />
       ))}
