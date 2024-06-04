@@ -8,11 +8,11 @@ import {useGameState} from '../hooks/useGameState';
 import {useTickAction} from '../hooks/useTickAction';
 import {HEIGHT, MOVEMENT_SPEED, WIDTH} from '../lib/constants';
 
-import type {SpriteRef} from './Sprite';
+import type {SpriteProps, SpriteRef} from './Sprite';
 import type {Spritesheet} from 'pixi.js';
 import type {Ref} from 'react';
 
-type PlayerProps = {
+type PlayerProps = Omit<SpriteProps, 'texture'> & {
   id: number;
   atlas: string;
   texture: string;
@@ -25,7 +25,7 @@ const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, for
   const app = useApp();
   const players = useGameState(state => state.players);
   const bullets = useGameState.getState().bullets;
-  const spriteSheet: Spritesheet = useAsset(atlas);
+  const spriteSheet = useAsset<Spritesheet>(atlas);
 
   const player = players.actions.get(id);
   const sprite = spriteSheet.textures[texture];
