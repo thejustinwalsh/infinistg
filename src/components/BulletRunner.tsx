@@ -45,7 +45,7 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
   });
 
   return (
-    <Container>
+    <Container name="BulletRunner">
       {bullets.actions.map(bullet => (
         <Bullet key={bullet.id} id={bullet.id ?? -1} texture={texture} x={bullet.pos.x} y={bullet.pos.y} />
       ))}
