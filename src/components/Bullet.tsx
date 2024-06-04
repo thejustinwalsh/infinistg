@@ -24,7 +24,7 @@ const Bullet = forwardRef(function Bullet({id, texture}: BulletProps, forwardedR
     ref.current?.position.set(bullet.pos.x, bullet.pos.y);
   });
 
-  return <Sprite ref={ref} anchor={0.5} x={bullet.pos.x} y={bullet.pos.y} texture={texture} />;
+  return <Sprite ref={ref} name={`Bullet-${id}`} anchor={0.5} x={bullet.pos.x} y={bullet.pos.y} texture={texture} />;
 });
 
 export default Bullet;

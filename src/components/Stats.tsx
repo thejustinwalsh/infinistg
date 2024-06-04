@@ -9,7 +9,7 @@ type Props = {
   parent?: React.RefObject<HTMLElement>;
 };
 
-export function Stats({showPanel = 0, className, parent}: Props): null {
+function StatsEnabled({showPanel = 0, className, parent}: Props): null {
   const [stats] = useState(() => new StatsImpl());
 
   useEffect(() => {
@@ -27,4 +27,8 @@ export function Stats({showPanel = 0, className, parent}: Props): null {
   });
 
   return null;
+}
+
+export function Stats({showPanel = 0, className, parent}: Props) {
+  return import.meta.env.DEV ? <StatsEnabled showPanel={showPanel} className={className} parent={parent} /> : null;
 }

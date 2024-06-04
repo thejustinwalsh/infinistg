@@ -49,7 +49,7 @@ export default function Title() {
   const shipWidth = spriteSheet.textures['ship-1'].width;
 
   return (
-    <Container interactive pointerdown={handlePointerDown}>
+    <Container name={'Title'} interactive pointerdown={handlePointerDown}>
       <Text
         text="INFINISTG"
         anchor={[0.5, 0.5]}

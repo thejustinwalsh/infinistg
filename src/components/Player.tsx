@@ -61,7 +61,17 @@ const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, for
     });
   });
 
-  return <Sprite ref={ref} scale={scale} anchor={0.5} x={player.pos.x} y={player.pos.y} texture={sprite} />;
+  return (
+    <Sprite
+      ref={ref}
+      name={`Player-${id}`}
+      scale={scale}
+      anchor={0.5}
+      x={player.pos.x}
+      y={player.pos.y}
+      texture={sprite}
+    />
+  );
 });
 
 export default Player;

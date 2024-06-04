@@ -4,6 +4,7 @@ import {Tilemap} from '@pixi/tilemap';
 import type {BaseTexture} from 'pixi.js';
 
 export type TilemapProps = {
+  name?: string;
   tilesets: BaseTexture[];
 };
 

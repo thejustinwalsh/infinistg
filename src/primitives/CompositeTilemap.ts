@@ -4,6 +4,7 @@ import {CompositeTilemap} from '@pixi/tilemap';
 import type {BaseTexture} from 'pixi.js';
 
 export type CompositeTilemapProps = {
+  name?: string;
   tilesets: BaseTexture[];
 };
 

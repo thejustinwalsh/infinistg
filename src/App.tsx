@@ -2,6 +2,7 @@ import {MemoryRouter, Route, Routes} from 'react-router';
 import {Text} from '@pixi/react';
 import {BaseTexture, SCALE_MODES, settings} from 'pixi.js';
 
+import DevTools from './components/DevTools';
 import Stage from './components/Stage';
 import {Stats} from './components/Stats';
 import {BACKGROUND_COLOR, HEIGHT, WIDTH} from './lib/constants';
@@ -16,6 +17,7 @@ settings.ROUND_PIXELS = true;
 export default function App() {
   return (
     <Stage width={WIDTH} height={HEIGHT} options={{background: BACKGROUND_COLOR}} loading={<Text text="Loading..." />}>
+      <DevTools />
       <Stats />
       <MemoryRouter>
         <Routes>

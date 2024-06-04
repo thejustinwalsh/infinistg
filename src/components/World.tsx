@@ -47,5 +47,5 @@ export default function World({world, level}: WorldProps) {
     });
   }, [levelData, tileSetUrls, tilesets]);
 
-  return <Tilemap ref={ref} tilesets={tilesetsList} />;
+  return <Tilemap ref={ref} name={`World-${level}`} tilesets={tilesetsList} />;
 }

@@ -62,8 +62,13 @@ export default function Game() {
   });
 
   return (
-    <Container>
-      <ScrollingTilingSprite image={'/assets/backgrounds/bg-1.png'} tilePosition={[0, 0]} scroll={[0, 0.25]} />
+    <Container name={'Game'}>
+      <ScrollingTilingSprite
+        name="Background"
+        image={'/assets/backgrounds/bg-1.png'}
+        tilePosition={[0, 0]}
+        scroll={[0, 0.25]}
+      />
       <World world="/data/world.json" level="Level_1" />
       {players.actions.map((player, index) => (
         <Player key={index} id={index} atlas="/assets/ships/atlas.json" texture={player.texture ?? 'ship-1'} />
