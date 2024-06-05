@@ -64,6 +64,11 @@ export type GameState = {
       set: (pairs: CollisionPairs) => void;
     };
   };
+  world: {
+    level: string;
+    index: number;
+    scroll: number;
+  };
   actions: {
     reset: () => void;
   };
@@ -151,6 +156,11 @@ export const useGameState = create<GameState>((set, get) => ({
         .map((_, i) => MAX_BULLETS - 1 - i),
     },
     count: 0,
+  },
+  world: {
+    level: '',
+    index: 0,
+    scroll: 0,
   },
   collision: {
     pairs: [],
