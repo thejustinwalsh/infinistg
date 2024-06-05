@@ -29,7 +29,7 @@ const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, for
 
   const player = players.actions.get(id);
   const sprite = spriteSheet.textures[texture];
-  const scale = 2;
+  const scale = 1.5;
 
   // Update player position
   useTick(delta => {
