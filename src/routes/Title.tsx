@@ -45,7 +45,7 @@ export default function Title() {
     navigate('/game'), [navigate];
   }, [players, navigate]);
 
-  const spriteSheet: Spritesheet = useAsset('/assets/ships/atlas.json');
+  const spriteSheet: Spritesheet = useAsset('./assets/ships/atlas.json');
   const shipWidth = spriteSheet.textures['ship-1'].width;
 
   return (
