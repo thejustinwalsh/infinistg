@@ -6,7 +6,7 @@ import Sprite from './Sprite';
 import {useAsset} from '../hooks/useAsset';
 import {useGameState} from '../hooks/useGameState';
 import {useTickAction} from '../hooks/useTickAction';
-import {HEIGHT, MOVEMENT_SPEED, WIDTH} from '../lib/constants';
+import {MOVEMENT_SPEED} from '../lib/constants';
 
 import type {SpriteProps, SpriteRef} from './Sprite';
 import type {Spritesheet} from 'pixi.js';
@@ -34,8 +34,14 @@ const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, for
   // Update player position
   useTick(delta => {
     const globalPos = new Point(
-      Math.min(WIDTH - sprite.width / 2, Math.max(sprite.width / 2, app.renderer.events.pointer.global.x)),
-      Math.min(HEIGHT - sprite.height / 2, Math.max(sprite.height / 2, app.renderer.events.pointer.global.y)),
+      Math.min(
+        app.renderer.screen.width - sprite.width / 2,
+        Math.max(sprite.width / 2, app.renderer.events.pointer.global.x),
+      ),
+      Math.min(
+        app.renderer.screen.height - sprite.height / 2,
+        Math.max(sprite.height / 2, app.renderer.events.pointer.global.y),
+      ),
     );
     const dir = globalPos.subtract(player.pos).normalize();
     const distance = globalPos.subtract(player.pos).magnitude();
