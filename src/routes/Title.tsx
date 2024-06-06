@@ -1,20 +1,20 @@
-import {useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useRef} from 'react';
 import {useNavigate} from 'react-router';
-import {Container, Text} from '@pixi/react';
+import {Container, Text, useTick} from '@pixi/react';
 import {TextStyle} from 'pixi.js';
 
-import Sprite from '../components/Sprite';
-import {useAsset} from '../hooks/useAsset';
+import ScrollingTilingSprite from '../components/ScrollingTilingSprite';
 import {useGameState} from '../hooks/useGameState';
 import {HEIGHT, WIDTH} from '../lib/constants';
 import zzfx from '../lib/zzfx';
 
-import type {Spritesheet} from 'pixi.js';
+import type {PixiRef} from '@pixi/react';
 
 export default function Title() {
   const actions = useGameState(state => state.actions);
   const players = useGameState(state => state.players);
   const navigate = useNavigate();
+  const ref = useRef<PixiRef<typeof Text>>(null);
 
   useEffect(() => {
     actions.reset(),
@@ -28,8 +28,14 @@ export default function Title() {
       });
   }, [actions, players.actions]);
 
+  useTick(() => {
+    if (ref.current) {
+      ref.current.alpha = Math.sin(performance.now() / 500) / 2 + 0.5;
+    }
+  });
+
   // TODO: Multiplayer?
-  const handlePointerDown = useCallback(() => {
+  const handleClick = useCallback(() => {
     if (players.count === 0) {
       console.log('Adding player');
       players.actions.add({
@@ -45,11 +51,14 @@ export default function Title() {
     navigate('/game'), [navigate];
   }, [players, navigate]);
 
-  const spriteSheet: Spritesheet = useAsset('./assets/ships/atlas.json');
-  const shipWidth = spriteSheet.textures['ship-1'].width;
-
   return (
-    <Container name={'Title'} interactive pointerdown={handlePointerDown}>
+    <Container name={'Title'} interactive click={handleClick}>
+      <ScrollingTilingSprite
+        name="Background"
+        image={'./assets/backgrounds/bg-1.png'}
+        tilePosition={[0, 0]}
+        scroll={[0, 0.25]}
+      />
       <Text
         text="INFINISTG"
         anchor={[0.5, 0.5]}
@@ -64,13 +73,21 @@ export default function Title() {
           })
         }
       />
-      <Container x={WIDTH / 2 - (shipWidth * 5) / 2} y={HEIGHT / 2 + 18}>
-        <Sprite texture={spriteSheet.textures['ship-1']} />
-        <Sprite x={shipWidth * 1} texture={spriteSheet.textures['ship-2']} />
-        <Sprite x={shipWidth * 2} texture={spriteSheet.textures['ship-3']} />
-        <Sprite x={shipWidth * 3} texture={spriteSheet.textures['ship-4']} />
-        <Sprite x={shipWidth * 4} texture={spriteSheet.textures['ship-5']} />
-      </Container>
+      <Text
+        ref={ref}
+        text="PRESS TO START"
+        anchor={[0.5, 0.5]}
+        x={WIDTH / 2}
+        y={HEIGHT / 2 + 40}
+        style={
+          new TextStyle({
+            align: 'center',
+            fill: '0xf7f7f7',
+            fontSize: 10,
+            letterSpacing: 1,
+          })
+        }
+      />
     </Container>
   );
 }
