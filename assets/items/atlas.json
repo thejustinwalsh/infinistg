@@ -1,0 +1,279 @@
+{
+  "frames": {
+    "gem-larege-blue": {
+      "frame": {
+        "x": 4,
+        "y": 4,
+        "w": 15,
+        "h": 13
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 3,
+        "y": 4,
+        "w": 15,
+        "h": 13
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "gem-large-green": {
+      "frame": {
+        "x": 27,
+        "y": 4,
+        "w": 15,
+        "h": 13
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 3,
+        "y": 4,
+        "w": 15,
+        "h": 13
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "gem-large-red": {
+      "frame": {
+        "x": 50,
+        "y": 4,
+        "w": 15,
+        "h": 13
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 3,
+        "y": 4,
+        "w": 15,
+        "h": 13
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "gem-large-yellow": {
+      "frame": {
+        "x": 73,
+        "y": 4,
+        "w": 15,
+        "h": 13
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 3,
+        "y": 4,
+        "w": 15,
+        "h": 13
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "coin-bronze": {
+      "frame": {
+        "x": 96,
+        "y": 4,
+        "w": 11,
+        "h": 11
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 5,
+        "y": 5,
+        "w": 11,
+        "h": 11
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "coin-gold": {
+      "frame": {
+        "x": 115,
+        "y": 4,
+        "w": 11,
+        "h": 11
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 5,
+        "y": 5,
+        "w": 11,
+        "h": 11
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "coin-silver": {
+      "frame": {
+        "x": 134,
+        "y": 4,
+        "w": 11,
+        "h": 11
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 5,
+        "y": 5,
+        "w": 11,
+        "h": 11
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "gem-small-blue": {
+      "frame": {
+        "x": 153,
+        "y": 4,
+        "w": 11,
+        "h": 9
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 5,
+        "y": 6,
+        "w": 11,
+        "h": 9
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "gem-small-green": {
+      "frame": {
+        "x": 172,
+        "y": 4,
+        "w": 11,
+        "h": 9
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 5,
+        "y": 6,
+        "w": 11,
+        "h": 9
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "gem-small-red": {
+      "frame": {
+        "x": 191,
+        "y": 4,
+        "w": 11,
+        "h": 9
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 5,
+        "y": 6,
+        "w": 11,
+        "h": 9
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "gem-small-yellow": {
+      "frame": {
+        "x": 210,
+        "y": 4,
+        "w": 11,
+        "h": 9
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 5,
+        "y": 6,
+        "w": 11,
+        "h": 9
+      },
+      "sourceSize": {
+        "w": 21,
+        "h": 21
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "meta": {
+    "app": "https://ourcade.co",
+    "version": "1.0.0",
+    "image": "atlas.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 225,
+      "h": 21
+    },
+    "scale": 1
+  }
+}
