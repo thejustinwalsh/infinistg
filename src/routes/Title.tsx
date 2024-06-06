@@ -52,7 +52,7 @@ export default function Title() {
   }, [players, navigate]);
 
   return (
-    <Container name={'Title'} interactive click={handleClick}>
+    <Container name={'Title'} interactive touchend={handleClick} click={handleClick}>
       <ScrollingTilingSprite
         name="Background"
         image={'./assets/backgrounds/bg-1.png'}
