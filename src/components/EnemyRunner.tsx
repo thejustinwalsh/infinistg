@@ -1,4 +1,5 @@
-import {Container, useTick} from '@pixi/react';
+import {useExtend, useTick} from '@pixi/react';
+import {Container} from 'pixi.js';
 
 import Enemy from './Enemy';
 import {useAsset} from '../hooks/useAsset';
@@ -12,12 +13,14 @@ type EnemyRunnerProps = {
 };
 
 export default function EnemyRunner({atlas}: EnemyRunnerProps) {
+  useExtend({Container});
+
   const enemies = useGameState(state => state.enemies);
 
   const spriteSheet: Spritesheet = useAsset(atlas);
   const texture = spriteSheet.textures['bullet-1'];
 
-  useTick(delta => {
+  useTick(({deltaTime: delta}) => {
     const pendingRemoval: number[] = [];
 
     for (let i = 0; i < enemies.count; i++) {
@@ -53,10 +56,10 @@ export default function EnemyRunner({atlas}: EnemyRunnerProps) {
   });
 
   return (
-    <Container name="EnemyRunner">
+    <container label="EnemyRunner">
       {enemies.actions.map(enemy => (
         <Enemy key={enemy.id} id={enemy.id ?? -1} texture={texture} x={enemy.pos.x} y={enemy.pos.y} />
       ))}
-    </Container>
+    </container>
   );
 }

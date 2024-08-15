@@ -1,5 +1,6 @@
-import {Container} from '@pixi/react';
-import {Point} from 'pixi.js';
+import {useCallback} from 'react';
+import {useExtend} from '@pixi/react';
+import {Container, Point} from 'pixi.js';
 
 import BulletRunner from '../components/BulletRunner';
 import Player from '../components/Player';
@@ -10,11 +11,14 @@ import {TickGroup, useTickGroup} from '../hooks/useTickGroup';
 import SpatialHash from '../lib/spatial-hash';
 
 import type {CollisionPairs} from '../hooks/useGameState';
+import type {FederatedPointerEvent} from 'pixi.js';
 
 const spatialHash = SpatialHash<{pool: string; id: number; x: number; y: number; width: number; height: number}>(32);
 
 export default function Game() {
-  const {players, enemies, bullets, collision} = useGameState.getState();
+  useExtend({Container});
+
+  const {players, enemies, bullets, collision, pointer} = useGameState.getState();
 
   useTickGroup(TickGroup.POST_TICK, () => {
     const collisions: CollisionPairs = [];
@@ -58,12 +62,20 @@ export default function Game() {
     collision.actions.set(collisions);
   });
 
+  const handlePointerMove = useCallback(
+    (e: FederatedPointerEvent) => {
+      pointer.x = e.globalX;
+      pointer.y = e.globalY;
+    },
+    [pointer],
+  );
+
   return (
-    <Container name={'Game'}>
+    <container label="Game" onGlobalPointerMove={handlePointerMove}>
       <ScrollingTilingSprite
-        name="Background"
+        label="Background"
         image={'./assets/backgrounds/bg-1.png'}
-        tilePosition={[0, 0]}
+        tilePosition={{x: 0, y: 0}}
         scroll={[0, 0.25]}
       />
       <World world="./assets/maps/infinistg.json" level="Level_1" />
@@ -71,6 +83,6 @@ export default function Game() {
         <Player key={index} id={index} atlas="./assets/ships/atlas.json" texture={player.texture ?? 'ship-1'} />
       ))}
       <BulletRunner atlas="./assets/bullets/atlas.json" />
-    </Container>
+    </container>
   );
 }

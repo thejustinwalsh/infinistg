@@ -1,20 +1,21 @@
-import {PixiComponent, applyDefaultProps} from '@pixi/react';
+/* eslint-disable @typescript-eslint/no-namespace */
+
+import {extend} from '@pixi/react';
 import {CompositeTilemap} from '@pixi/tilemap';
 
-import type {BaseTexture} from 'pixi.js';
+import type {TextureSource} from 'pixi.js';
 
-export type CompositeTilemapProps = {
-  name?: string;
-  tilesets: BaseTexture[];
-};
+extend({CompositeTilemap});
 
-export default PixiComponent<CompositeTilemapProps, CompositeTilemap>('CompositeTilemap', {
-  create: props => {
-    const {tilesets} = props;
-    const composite = new CompositeTilemap(tilesets);
-    return composite;
-  },
-  applyProps: (instance, oldProps, newProps) => {
-    applyDefaultProps(instance, oldProps, newProps);
-  },
-});
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      // TODO: How do we ensure we ger the correct props for Tilemap?
+      compositeTilemap: React.PropsWithRef<{
+        ref?: React.RefObject<CompositeTilemap>;
+        label?: string;
+        tilesets: TextureSource[];
+      }>;
+    }
+  }
+}

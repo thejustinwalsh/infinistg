@@ -1,9 +1,9 @@
 import {Suspense} from 'react';
-import {Stage as ReactPixiStage} from '@pixi/react';
+import {Application as PixiApplication} from '@pixi/react';
 
 import ErrorBoundary from './ErrorBoundary';
 
-export type StageProps = React.ComponentProps<typeof ReactPixiStage> &
+export type StageProps = React.ComponentProps<typeof PixiApplication> &
   React.PropsWithChildren<{
     loading?: React.ReactNode;
     error?: React.ReactElement;
@@ -11,10 +11,10 @@ export type StageProps = React.ComponentProps<typeof ReactPixiStage> &
 
 export default function Stage({children, loading, error, ...props}: StageProps) {
   return (
-    <ReactPixiStage {...props}>
+    <PixiApplication {...props}>
       <ErrorBoundary fallback={error}>
         <Suspense fallback={loading}>{children}</Suspense>
       </ErrorBoundary>
-    </ReactPixiStage>
+    </PixiApplication>
   );
 }

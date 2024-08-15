@@ -1,10 +1,10 @@
 import {useEffect, useMemo, useRef} from 'react';
-import {type PixiRef, useApp, useTick} from '@pixi/react';
+import {useApplication, useExtend, useTick} from '@pixi/react';
+import {Tilemap} from '@pixi/tilemap';
 
 import {useAsset, useAssets} from '../hooks/useAsset';
 import {useGameState} from '../hooks/useGameState';
 import {relativeTo, url} from '../lib/url-cache';
-import Tilemap from '../primitives/Tilemap';
 
 import type {EntityInstance, LayerInstance, Ldtk, TileInstance} from '../lib/ldtk';
 import type {Texture} from 'pixi.js';
@@ -15,10 +15,13 @@ export type WorldProps = {
 };
 
 export default function World({world: path, level}: WorldProps) {
-  const app = useApp();
+  useExtend({Tilemap});
+
+  const {app} = useApplication();
   const world = useGameState.getState().world;
-  const ref = useRef<PixiRef<typeof Tilemap>>(null);
+  const ref = useRef<Tilemap>(null);
   const worldData = useAsset<Ldtk>(path);
+  console.log(worldData);
   const tileSetUrls = useMemo(
     () =>
       worldData.defs.tilesets
@@ -27,7 +30,7 @@ export default function World({world: path, level}: WorldProps) {
     [path, worldData.defs.tilesets],
   );
   const tilesets = useAssets<Texture>(tileSetUrls);
-  const tilesetsList = useMemo(() => Object.values(tilesets).map(t => t.baseTexture), [tilesets]);
+  const tilesetsList = useMemo(() => Object.values(tilesets).map(t => t.source), [tilesets]);
   const levelIndex = worldData.levels.findIndex(({identifier}) => identifier === level);
   if (!worldData.levels[levelIndex]) throw new Error(`Level not found: ${level}`);
 
@@ -38,7 +41,7 @@ export default function World({world: path, level}: WorldProps) {
     world.index = levelIndex;
   }, [level, levelIndex, world]);
 
-  useTick(delta => {
+  useTick(({deltaTime: delta}) => {
     world.scroll += delta * 0.5;
 
     const currentLevel = worldData.levels[world.index % worldData.levels.length];
@@ -92,14 +95,14 @@ export default function World({world: path, level}: WorldProps) {
     }
   });
 
-  return <Tilemap ref={ref} name={`World-${level}`} tilesets={tilesetsList} />;
+  return <tilemap ref={ref} label={`World-${level}`} tilesets={tilesetsList} />;
 }
 
 function renderTiles(
   layers: LayerInstance[] | null | undefined,
   tilesets: Record<string, Texture>,
   tileSetUrls: string[],
-  ref: React.RefObject<PixiRef<typeof Tilemap>>,
+  ref: React.RefObject<Tilemap>,
   scroll: (layer: LayerInstance) => number,
   filter?: (tile: TileInstance, layer: LayerInstance, scroll: number) => boolean,
 ) {
@@ -116,7 +119,7 @@ function renderTiles(
       tiles
         .filter(tile => filter?.(tile, layer, s) ?? true)
         .forEach(tile => {
-          ref.current?.tile(tileset.baseTexture, tile.px[0], tile.px[1] + s, {
+          ref.current?.tile(tileset.source, tile.px[0], tile.px[1] + s, {
             u: tile.src[0],
             v: tile.src[1],
             tileWidth: layer.__gridSize,

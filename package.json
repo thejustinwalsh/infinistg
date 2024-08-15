@@ -11,9 +11,9 @@
   },
   "dependencies": {
     "@pixi/math-extras": "^7.4.2",
-    "@pixi/react": "^7.1.0",
-    "@pixi/tilemap": "^4.1.0",
-    "pixi.js": "^7.4.2",
+    "@pixi/react": "https://pkg.csb.dev/pixijs/pixi-react/commit/d470738f/@pixi/react",
+    "@pixi/tilemap": "^5.0.1",
+    "pixi.js": "^8.3.3",
     "react": "^18.3.1",
     "react-dom": "^18.3",
     "react-router": "^6.23.1",

@@ -1,20 +1,20 @@
 import {useCallback, useEffect, useRef} from 'react';
 import {useNavigate} from 'react-router';
-import {Container, Text, useTick} from '@pixi/react';
-import {TextStyle} from 'pixi.js';
+import {useExtend, useTick} from '@pixi/react';
+import {Container, Text, TextStyle} from 'pixi.js';
 
 import ScrollingTilingSprite from '../components/ScrollingTilingSprite';
 import {useGameState} from '../hooks/useGameState';
 import {HEIGHT, WIDTH} from '../lib/constants';
 import zzfx from '../lib/zzfx';
 
-import type {PixiRef} from '@pixi/react';
-
 export default function Title() {
+  useExtend({Container, Text});
+
   const actions = useGameState(state => state.actions);
   const players = useGameState(state => state.players);
   const navigate = useNavigate();
-  const ref = useRef<PixiRef<typeof Text>>(null);
+  const ref = useRef<Text>(null);
 
   useEffect(() => {
     actions.reset(),
@@ -52,16 +52,16 @@ export default function Title() {
   }, [players, navigate]);
 
   return (
-    <Container name={'Title'} interactive touchend={handleClick} click={handleClick}>
+    <container label="Title" interactive onTouchEnd={handleClick} onClick={handleClick}>
       <ScrollingTilingSprite
-        name="Background"
+        label="Background"
         image={'./assets/backgrounds/bg-1.png'}
-        tilePosition={[0, 0]}
+        tilePosition={{x: 0, y: 0}}
         scroll={[0, 0.25]}
       />
-      <Text
+      <pixiText
         text="INFINISTG"
-        anchor={[0.5, 0.5]}
+        anchor={0.5}
         x={WIDTH / 2}
         y={HEIGHT / 2}
         style={
@@ -73,10 +73,10 @@ export default function Title() {
           })
         }
       />
-      <Text
+      <pixiText
         ref={ref}
         text="PRESS TO START"
-        anchor={[0.5, 0.5]}
+        anchor={0.5}
         x={WIDTH / 2}
         y={HEIGHT / 2 + 40}
         style={
@@ -88,6 +88,6 @@ export default function Title() {
           })
         }
       />
-    </Container>
+    </container>
   );
 }

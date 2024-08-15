@@ -1,7 +1,7 @@
-import {useApp} from '@pixi/react';
+import {useApplication} from '@pixi/react';
 
 function DevToolsEnabled(): null {
-  const app = useApp();
+  const {app} = useApplication();
   // @ts-expect-error - Expose app to global scope for debugging
   globalThis.__PIXI_APP__ = app;
   return null;

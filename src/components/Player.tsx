@@ -1,5 +1,5 @@
 import {forwardRef, useImperativeHandle, useRef} from 'react';
-import {useApp, useTick} from '@pixi/react';
+import {useApplication, useTick} from '@pixi/react';
 import {Point} from 'pixi.js';
 
 import Sprite from './Sprite';
@@ -8,8 +8,8 @@ import {useGameState} from '../hooks/useGameState';
 import {useTickAction} from '../hooks/useTickAction';
 import {MOVEMENT_SPEED} from '../lib/constants';
 
-import type {SpriteProps, SpriteRef} from './Sprite';
-import type {Spritesheet} from 'pixi.js';
+import type {SpriteProps} from './Sprite';
+import type {Sprite as ReactPixiSprite, Spritesheet} from 'pixi.js';
 import type {Ref} from 'react';
 
 type PlayerProps = Omit<SpriteProps, 'texture'> & {
@@ -18,13 +18,13 @@ type PlayerProps = Omit<SpriteProps, 'texture'> & {
   texture: string;
 };
 
-const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, forwardedRef: Ref<SpriteRef>) {
-  const ref = useRef<SpriteRef>(null);
+const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, forwardedRef: Ref<ReactPixiSprite>) {
+  const ref = useRef<ReactPixiSprite>(null);
   useImperativeHandle(forwardedRef, () => ref.current!, []);
 
-  const app = useApp();
+  const {app} = useApplication();
   const players = useGameState(state => state.players);
-  const bullets = useGameState.getState().bullets;
+  const {bullets} = useGameState.getState();
   const spriteSheet = useAsset<Spritesheet>(atlas);
 
   const player = players.actions.get(id);
@@ -32,7 +32,7 @@ const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, for
   const scale = 1.5;
 
   // Update player position
-  useTick(delta => {
+  useTick(({deltaTime: delta}) => {
     const globalPos = new Point(
       Math.min(
         app.renderer.screen.width - sprite.width / 2,
@@ -70,7 +70,7 @@ const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, for
   return (
     <Sprite
       ref={ref}
-      name={`Player-${id}`}
+      label={`Player-${id}`}
       scale={scale}
       anchor={0.5}
       x={player.pos.x}

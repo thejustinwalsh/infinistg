@@ -1,4 +1,5 @@
-import {Container, useTick} from '@pixi/react';
+import {useExtend, useTick} from '@pixi/react';
+import {Container} from 'pixi.js';
 
 import Bullet from './Bullet';
 import {useAsset} from '../hooks/useAsset';
@@ -12,12 +13,14 @@ type BulletRunnerProps = {
 };
 
 export default function BulletRunner({atlas}: BulletRunnerProps) {
+  useExtend({Container});
+
   const bullets = useGameState(state => state.bullets);
 
   const spriteSheet: Spritesheet = useAsset(atlas);
   const texture = spriteSheet.textures['bullet-1'];
 
-  useTick(delta => {
+  useTick(({deltaTime: delta}) => {
     const pendingRemoval: number[] = [];
 
     for (let i = 0; i < bullets.count; i++) {
@@ -45,10 +48,10 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
   });
 
   return (
-    <Container name="BulletRunner">
+    <container label="BulletRunner">
       {bullets.actions.map(bullet => (
         <Bullet key={bullet.id} id={bullet.id ?? -1} texture={texture} x={bullet.pos.x} y={bullet.pos.y} />
       ))}
-    </Container>
+    </container>
   );
 }
