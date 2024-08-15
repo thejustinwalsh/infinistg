@@ -4,6 +4,8 @@ import {create} from 'zustand';
 
 import {HEIGHT, WIDTH} from '../lib/constants';
 
+import type {Pattern, PatternGenerator} from '../lib/patterns';
+
 const MAX_PLAYERS = 4;
 const MAX_ENEMIES = 100;
 const MAX_BULLETS = 5000;
@@ -54,9 +56,21 @@ export type BulletState = SceneObjectState & {
   lifetime: number;
 };
 
+export type EnemyState = EntityState & {
+  sprite: string;
+  pattern: Pattern<EnemyState>;
+  generator?: PatternGenerator;
+  dir: {x: number; y: number};
+  scale: number;
+  speed: number;
+  delta: number;
+  sleep: number;
+  timestamp: number;
+};
+
 export type GameState = {
   players: StatePool<EntityState>;
-  enemies: StatePool<EntityState>;
+  enemies: StatePool<EnemyState>;
   bullets: StatePool<BulletState>;
   collision: {
     pairs: CollisionPairs;
@@ -109,17 +123,26 @@ export const useGameState = create<GameState>((set, get) => ({
   },
   enemies: {
     actions: {
-      add: (entity: EntityState) =>
+      add: (entity: EnemyState) =>
         set(state => ({...state, enemies: {...state.enemies, count: addTo(state.enemies, entity)}})),
-      remove: (entity: number | EntityState) =>
+      remove: (entity: number | EnemyState) =>
         set(state => ({...state, enemies: {...state.enemies, count: removeFrom(state.enemies, entity)}})),
       get: (index: number) => getFrom(get().enemies, index),
-      map: <U>(fn: (entity: EntityState, index: number) => U) => mapFrom(get().enemies, fn),
+      map: <U>(fn: (entity: EnemyState, index: number) => U) => mapFrom(get().enemies, fn),
     },
     pool: {
-      entities: Array<EntityState>(MAX_ENEMIES).fill({
+      entities: Array<EnemyState>(MAX_ENEMIES).fill({
+        sprite: '',
+        pattern: function* (state: EnemyState) { void state; yield; }, // prettier-ignore
+        generator: undefined,
         pos: {x: -WIDTH, y: -HEIGHT},
+        dir: {x: 0, y: 0},
         radius: 0,
+        scale: 1,
+        speed: 0,
+        delta: 0,
+        sleep: 0,
+        timestamp: 0,
         fireRate: 0,
         health: 0,
         maxHealth: 0,

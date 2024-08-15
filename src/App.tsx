@@ -16,16 +16,22 @@ settings.ROUND_PIXELS = true;
 
 export default function App() {
   return (
-    <Stage width={WIDTH} height={HEIGHT} options={{background: BACKGROUND_COLOR}} loading={<Text text="Loading..." />}>
-      <DevTools />
-      <Stats />
-      <MemoryRouter>
-        <Routes>
-          <Route path="/" element={<Title />} />
-          <Route path="/title" element={<Title />} />
-          <Route path="/game" element={<Game />} />
-        </Routes>
-      </MemoryRouter>
-    </Stage>
+    <>
+      <Stage
+        width={WIDTH}
+        height={HEIGHT}
+        options={{background: BACKGROUND_COLOR}}
+        loading={<Text text="Loading..." />}>
+        <DevTools />
+        <Stats />
+        <MemoryRouter>
+          <Routes>
+            <Route path="/" element={<Title />} />
+            <Route path="/title" element={<Title />} />
+            <Route path="/game" element={<Game />} />
+          </Routes>
+        </MemoryRouter>
+      </Stage>
+    </>
   );
 }
