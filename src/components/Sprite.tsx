@@ -1,7 +1,7 @@
 import {forwardRef, useImperativeHandle, useRef} from 'react';
 import {useExtend} from '@pixi/react';
 import type {} from '@pixi/react';
-import {Sprite as ReactPixiSprite} from 'pixi.js';
+import {Sprite as PixiSprite} from 'pixi.js';
 
 import ErrorBoundary from './ErrorBoundary';
 import SpriteFallback from './SpriteFallback';
@@ -15,15 +15,15 @@ export type SpriteProps = JSX.IntrinsicElements['sprite'] & {
   texture?: Texture;
 };
 
-const SpriteFromImage = forwardRef(({image, ...props}: SpriteProps & {image: string}, ref: Ref<ReactPixiSprite>) => {
+const SpriteFromImage = forwardRef(({image, ...props}: SpriteProps & {image: string}, ref: Ref<PixiSprite>) => {
   const texture = useAsset<Texture>(image);
   return <sprite ref={ref} texture={texture} {...props} />;
 });
 
-const Sprite = forwardRef(function Sprite({image, texture, ...props}: SpriteProps, forwardedRef: Ref<ReactPixiSprite>) {
-  useExtend({Sprite: ReactPixiSprite});
+const Sprite = forwardRef(function Sprite({image, texture, ...props}: SpriteProps, forwardedRef: Ref<PixiSprite>) {
+  useExtend({Sprite: PixiSprite});
 
-  const ref = useRef<ReactPixiSprite>(null);
+  const ref = useRef<PixiSprite>(null);
   useImperativeHandle(forwardedRef, () => ref.current!, []);
 
   const {width, height} = props;

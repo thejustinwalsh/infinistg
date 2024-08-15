@@ -9,7 +9,7 @@ import {useTickAction} from '../hooks/useTickAction';
 import {MOVEMENT_SPEED} from '../lib/constants';
 
 import type {SpriteProps} from './Sprite';
-import type {Sprite as ReactPixiSprite, Spritesheet} from 'pixi.js';
+import type {Sprite as PixiSprite, Spritesheet} from 'pixi.js';
 import type {Ref} from 'react';
 
 type PlayerProps = Omit<SpriteProps, 'texture'> & {
@@ -18,8 +18,8 @@ type PlayerProps = Omit<SpriteProps, 'texture'> & {
   texture: string;
 };
 
-const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, forwardedRef: Ref<ReactPixiSprite>) {
-  const ref = useRef<ReactPixiSprite>(null);
+const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, forwardedRef: Ref<PixiSprite>) {
+  const ref = useRef<PixiSprite>(null);
   useImperativeHandle(forwardedRef, () => ref.current!, []);
 
   const {app} = useApplication();

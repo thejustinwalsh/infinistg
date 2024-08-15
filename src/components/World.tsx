@@ -21,7 +21,6 @@ export default function World({world: path, level}: WorldProps) {
   const world = useGameState.getState().world;
   const ref = useRef<Tilemap>(null);
   const worldData = useAsset<Ldtk>(path);
-  console.log(worldData);
   const tileSetUrls = useMemo(
     () =>
       worldData.defs.tilesets

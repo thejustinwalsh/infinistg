@@ -83,10 +83,6 @@ export type GameState = {
     index: number;
     scroll: number;
   };
-  pointer: {
-    x: number;
-    y: number;
-  };
   actions: {
     reset: () => void;
   };
@@ -194,10 +190,6 @@ export const useGameState = create<GameState>((set, get) => ({
     actions: {
       set: (pairs: CollisionPairs) => set(state => ({...state, collision: {...state.collision, pairs}})),
     },
-  },
-  pointer: {
-    x: 0,
-    y: 0,
   },
   actions: {
     reset: () => reset(get()),

@@ -1,8 +1,7 @@
 import {useRef} from 'react';
-import {useTick} from '@pixi/react';
+import {useApplication, useTick} from '@pixi/react';
 
 import TilingSprite from './TilingSprite';
-import {HEIGHT, WIDTH} from '../lib/constants';
 
 import type {TilingSpriteProps} from './TilingSprite';
 import type {TilingSprite as PixiTilingSprite} from 'pixi.js';
@@ -12,6 +11,7 @@ export type ScrollingTilingSpriteProps = TilingSpriteProps & {
 };
 
 export default function ScrollingTilingSprite({image, scroll, ...props}: ScrollingTilingSpriteProps) {
+  const {app} = useApplication();
   const ref = useRef<PixiTilingSprite>(null);
 
   useTick(({deltaTime: delta}) => {
@@ -21,5 +21,13 @@ export default function ScrollingTilingSprite({image, scroll, ...props}: Scrolli
     );
   });
 
-  return <TilingSprite ref={ref} image={image} width={WIDTH} height={HEIGHT} {...props} />;
+  return (
+    <TilingSprite
+      ref={ref}
+      image={image}
+      width={app.renderer.screen.width}
+      height={app.renderer.screen.height}
+      {...props}
+    />
+  );
 }

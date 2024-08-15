@@ -1,4 +1,3 @@
-import {useCallback} from 'react';
 import {useExtend} from '@pixi/react';
 import {Container, Point} from 'pixi.js';
 
@@ -11,14 +10,13 @@ import {TickGroup, useTickGroup} from '../hooks/useTickGroup';
 import SpatialHash from '../lib/spatial-hash';
 
 import type {CollisionPairs} from '../hooks/useGameState';
-import type {FederatedPointerEvent} from 'pixi.js';
 
 const spatialHash = SpatialHash<{pool: string; id: number; x: number; y: number; width: number; height: number}>(32);
 
 export default function Game() {
   useExtend({Container});
 
-  const {players, enemies, bullets, collision, pointer} = useGameState.getState();
+  const {players, enemies, bullets, collision} = useGameState.getState();
 
   useTickGroup(TickGroup.POST_TICK, () => {
     const collisions: CollisionPairs = [];
@@ -62,16 +60,8 @@ export default function Game() {
     collision.actions.set(collisions);
   });
 
-  const handlePointerMove = useCallback(
-    (e: FederatedPointerEvent) => {
-      pointer.x = e.globalX;
-      pointer.y = e.globalY;
-    },
-    [pointer],
-  );
-
   return (
-    <container label="Game" onGlobalPointerMove={handlePointerMove}>
+    <container label="Game">
       <ScrollingTilingSprite
         label="Background"
         image={'./assets/backgrounds/bg-1.png'}

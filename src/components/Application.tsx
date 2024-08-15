@@ -1,20 +1,27 @@
-import {Suspense} from 'react';
-import {Application as PixiApplication} from '@pixi/react';
+import {Suspense, useCallback, useState} from 'react';
+import {Application as ReactPixiApplication} from '@pixi/react';
 
 import ErrorBoundary from './ErrorBoundary';
 
-export type StageProps = React.ComponentProps<typeof PixiApplication> &
+export type ApplicationProps = React.ComponentProps<typeof ReactPixiApplication> &
   React.PropsWithChildren<{
     loading?: React.ReactNode;
     error?: React.ReactElement;
   }>;
 
-export default function Stage({children, loading, error, ...props}: StageProps) {
+export default function Application({children, loading, error, ...props}: ApplicationProps) {
+  const [isInitialized, setIsInitialized] = useState(false);
+  const handleInit = useCallback(() => setIsInitialized(true), []);
+
   return (
-    <PixiApplication {...props}>
-      <ErrorBoundary fallback={error}>
-        <Suspense fallback={loading}>{children}</Suspense>
-      </ErrorBoundary>
-    </PixiApplication>
+    <Suspense>
+      <ReactPixiApplication onInit={handleInit} {...props}>
+        {isInitialized && (
+          <ErrorBoundary fallback={error}>
+            <Suspense fallback={loading}>{children}</Suspense>
+          </ErrorBoundary>
+        )}
+      </ReactPixiApplication>
+    </Suspense>
   );
 }
