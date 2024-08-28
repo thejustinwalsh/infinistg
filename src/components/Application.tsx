@@ -14,14 +14,12 @@ export default function Application({children, loading, error, ...props}: Applic
   const handleInit = useCallback(() => setIsInitialized(true), []);
 
   return (
-    <Suspense>
-      <ReactPixiApplication onInit={handleInit} {...props}>
-        {isInitialized && (
-          <ErrorBoundary fallback={error}>
-            <Suspense fallback={loading}>{children}</Suspense>
-          </ErrorBoundary>
-        )}
-      </ReactPixiApplication>
-    </Suspense>
+    <ReactPixiApplication onInit={handleInit} {...props}>
+      {isInitialized && (
+        <ErrorBoundary fallback={error}>
+          <Suspense fallback={loading}>{children}</Suspense>
+        </ErrorBoundary>
+      )}
+    </ReactPixiApplication>
   );
 }

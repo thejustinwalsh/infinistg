@@ -1,35 +1,47 @@
 import {useEffect, useMemo, useRef} from 'react';
 import {useApplication, useExtend, useTick} from '@pixi/react';
-import {Tilemap} from '@pixi/tilemap';
+import {Pool, Sprite} from 'pixi.js';
+import {Container} from 'pixi.js';
 
-import {useAsset, useAssets} from '../hooks/useAsset';
+import {useAsset} from '../hooks/useAsset';
 import {useGameState} from '../hooks/useGameState';
+import useTileset from '../hooks/useTileset';
+import {HEIGHT, WIDTH} from '../lib/constants';
 import {relativeTo, url} from '../lib/url-cache';
 
 import type {EntityInstance, LayerInstance, Ldtk, TileInstance} from '../lib/ldtk';
-import type {Texture} from 'pixi.js';
+import type Tileset from '../lib/tileset';
 
 export type WorldProps = {
   world: string;
   level: string;
 };
 
+const spritePool: Pool<Sprite> = new Pool(Sprite, (WIDTH * HEIGHT) / 18 + 1);
+
 export default function World({world: path, level}: WorldProps) {
-  useExtend({Tilemap});
+  useExtend({Container});
 
   const {app} = useApplication();
   const world = useGameState.getState().world;
-  const ref = useRef<Tilemap>(null);
+  const ref = useRef<Container>(null);
   const worldData = useAsset<Ldtk>(path);
-  const tileSetUrls = useMemo(
-    () =>
-      worldData.defs.tilesets
-        .filter(({relPath}) => !!relPath)
-        .map(({relPath}) => url(relPath!, relativeTo(path, relPath!))),
-    [path, worldData.defs.tilesets],
-  );
-  const tilesets = useAssets<Texture>(tileSetUrls);
-  const tilesetsList = useMemo(() => Object.values(tilesets).map(t => t.source), [tilesets]);
+
+  const [tilesetUrls, tilesetFrames] = useMemo(() => {
+    const data = worldData.defs.tilesets
+      .filter(({relPath}) => !!relPath)
+      .map(({__cHei: rows, __cWid: cols, padding, spacing, tileGridSize, relPath}) => ({
+        url: url(relPath!, relativeTo(path, relPath!)),
+        frames: Array.from({length: rows * cols}, (_, i) => {
+          const x = (i % cols) * (tileGridSize + spacing) + padding;
+          const y = Math.floor(i / cols) * (tileGridSize + spacing) + padding;
+          return {x, y, width: tileGridSize, height: tileGridSize};
+        }),
+      }));
+    return [data.map(({url}) => url), data] as const;
+  }, [path, worldData.defs.tilesets]);
+  const tilesets = useTileset(tilesetUrls, tilesetFrames);
+
   const levelIndex = worldData.levels.findIndex(({identifier}) => identifier === level);
   if (!worldData.levels[levelIndex]) throw new Error(`Level not found: ${level}`);
 
@@ -47,7 +59,7 @@ export default function World({world: path, level}: WorldProps) {
     const nextLevel = worldData.levels[world.index - 1 < 0 ? worldData.levels.length - 1 : world.index - 1];
 
     // Clear the tilemap
-    ref.current?.clear();
+    ref.current?.removeChildren().forEach(sprite => (sprite instanceof Sprite ? spritePool.return(sprite) : null));
 
     // TODO: Update tiles in spatial-hash as we scroll
 
@@ -55,7 +67,7 @@ export default function World({world: path, level}: WorldProps) {
     renderTiles(
       nextLevel.layerInstances,
       tilesets,
-      tileSetUrls,
+      tilesetUrls,
       ref,
       layer => world.scroll - layer.__cHei * layer.__gridSize,
       (tile, layer, scroll) => tile.px[1] + scroll + layer.__gridSize >= 0,
@@ -65,7 +77,7 @@ export default function World({world: path, level}: WorldProps) {
     renderTiles(
       currentLevel.layerInstances,
       tilesets,
-      tileSetUrls,
+      tilesetUrls,
       ref,
       () => world.scroll,
       (tile, _, scroll) => tile.px[1] + scroll <= app.renderer.screen.height,
@@ -94,36 +106,33 @@ export default function World({world: path, level}: WorldProps) {
     }
   });
 
-  return <tilemap ref={ref} label={`World-${level}`} tilesets={tilesetsList} />;
+  return <container ref={ref} label={`World-${level}`} />;
 }
 
 function renderTiles(
   layers: LayerInstance[] | null | undefined,
-  tilesets: Record<string, Texture>,
+  tilesets: Tileset,
   tileSetUrls: string[],
-  ref: React.RefObject<Tilemap>,
+  ref: React.MutableRefObject<Container | null>,
   scroll: (layer: LayerInstance) => number,
   filter?: (tile: TileInstance, layer: LayerInstance, scroll: number) => boolean,
 ) {
   layers
     ?.filter(l => l.__type !== 'Entities')
     .forEach(layer => {
-      const tileset = layer.__tilesetRelPath
-        ? tilesets[tileSetUrls.findIndex(u => u.endsWith(layer.__tilesetRelPath!))]
-        : undefined;
+      const url = tileSetUrls[tileSetUrls.findIndex(u => u.endsWith(layer.__tilesetRelPath!))];
       const tiles = layer.__type === 'Tiles' ? layer.gridTiles : layer.autoLayerTiles;
-      if (!tileset || tiles.length === 0) return;
+      if (tiles.length === 0) return;
 
       const s = scroll(layer);
       tiles
         .filter(tile => filter?.(tile, layer, s) ?? true)
         .forEach(tile => {
-          ref.current?.tile(tileset.source, tile.px[0], tile.px[1] + s, {
-            u: tile.src[0],
-            v: tile.src[1],
-            tileWidth: layer.__gridSize,
-            tileHeight: layer.__gridSize,
-          });
+          const t = spritePool.get();
+          t.texture = tilesets.tile(url, tile.t);
+          t.x = tile.px[0];
+          t.y = tile.px[1] + s;
+          ref.current?.addChild(t);
         });
     });
 }

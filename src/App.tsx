@@ -8,6 +8,7 @@ import {Stats} from './components/Stats';
 import {BACKGROUND_COLOR, HEIGHT, WIDTH} from './lib/constants';
 import Game from './routes/Game';
 import Title from './routes/Title';
+
 import 'pixi.js/math-extras';
 
 // Default global pixi settings
@@ -21,7 +22,12 @@ export default function App() {
 
   return (
     <>
-      <Application width={WIDTH} height={HEIGHT} background={BACKGROUND_COLOR} loading={<pixiText text="Loading..." />}>
+      <Application
+        preference="webgpu"
+        width={WIDTH}
+        height={HEIGHT}
+        background={BACKGROUND_COLOR}
+        loading={<pixiText text="Loading..." />}>
         <DevTools />
         <Stats />
         <MemoryRouter>
