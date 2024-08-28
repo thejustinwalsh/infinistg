@@ -1,6 +1,8 @@
 import {useEffect, useRef} from 'react';
-import {useApp} from '@pixi/react';
+import {useApplication} from '@pixi/react';
 import {UPDATE_PRIORITY} from 'pixi.js';
+
+import type {Ticker} from 'pixi.js';
 
 export type Callback = (delta: number) => void;
 export enum TickGroup {
@@ -14,7 +16,7 @@ const priority: {[key in TickGroup]: UPDATE_PRIORITY} = {
 };
 
 export function useTickGroup(group: TickGroup, callback: Callback, enabled = true) {
-  const app = useApp();
+  const {app} = useApplication();
   const callbackRef = useRef<Callback | null>(null);
 
   useEffect(() => {
@@ -23,7 +25,7 @@ export function useTickGroup(group: TickGroup, callback: Callback, enabled = tru
 
   useEffect(() => {
     if (enabled) {
-      const tick = (delta: number) => callbackRef.current?.apply(app.ticker, [delta]);
+      const tick = (ticker: Ticker) => callbackRef.current?.apply(app.ticker, [ticker.deltaTime]);
       app.ticker.add(tick, undefined, priority[group]);
 
       return () => {

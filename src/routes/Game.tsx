@@ -1,5 +1,5 @@
-import {Container} from '@pixi/react';
-import {Point} from 'pixi.js';
+import {useExtend} from '@pixi/react';
+import {Container, Point} from 'pixi.js';
 
 import BulletRunner from '../components/BulletRunner';
 import Player from '../components/Player';
@@ -14,6 +14,8 @@ import type {CollisionPairs} from '../hooks/useGameState';
 const spatialHash = SpatialHash<{pool: string; id: number; x: number; y: number; width: number; height: number}>(32);
 
 export default function Game() {
+  useExtend({Container});
+
   const {players, enemies, bullets, collision} = useGameState.getState();
 
   useTickGroup(TickGroup.POST_TICK, () => {
@@ -59,11 +61,11 @@ export default function Game() {
   });
 
   return (
-    <Container name={'Game'}>
+    <container label="Game">
       <ScrollingTilingSprite
-        name="Background"
+        label="Background"
         image={'./assets/backgrounds/bg-1.png'}
-        tilePosition={[0, 0]}
+        tilePosition={{x: 0, y: 0}}
         scroll={[0, 0.25]}
       />
       <World world="./assets/maps/infinistg.json" level="Level_1" />
@@ -71,6 +73,6 @@ export default function Game() {
         <Player key={index} id={index} atlas="./assets/ships/atlas.json" texture={player.texture ?? 'ship-1'} />
       ))}
       <BulletRunner atlas="./assets/bullets/atlas.json" />
-    </Container>
+    </container>
   );
 }

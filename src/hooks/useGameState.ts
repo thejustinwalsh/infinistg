@@ -1,5 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
-
 import {create} from 'zustand';
 
 import {HEIGHT, WIDTH} from '../lib/constants';

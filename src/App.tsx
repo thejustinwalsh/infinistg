@@ -1,27 +1,33 @@
 import {MemoryRouter, Route, Routes} from 'react-router';
-import {Text} from '@pixi/react';
-import {BaseTexture, SCALE_MODES, settings} from 'pixi.js';
+import {useExtend} from '@pixi/react';
+import {AbstractRenderer, EventSystem, Text, TextureSource} from 'pixi.js';
 
+import Application from './components/Application';
 import DevTools from './components/DevTools';
-import Stage from './components/Stage';
 import {Stats} from './components/Stats';
 import {BACKGROUND_COLOR, HEIGHT, WIDTH} from './lib/constants';
 import Game from './routes/Game';
 import Title from './routes/Title';
-import '@pixi/math-extras';
+
+import 'pixi.js/math-extras';
 
 // Default global pixi settings
-BaseTexture.defaultOptions.scaleMode = SCALE_MODES.NEAREST;
-settings.ROUND_PIXELS = true;
+TextureSource.defaultOptions.scaleMode = 'nearest';
+AbstractRenderer.defaultOptions.roundPixels = true;
+EventSystem.defaultEventFeatures.move = true;
+EventSystem.defaultEventFeatures.globalMove = true;
 
 export default function App() {
+  useExtend({Text});
+
   return (
     <>
-      <Stage
+      <Application
+        preference="webgpu"
         width={WIDTH}
         height={HEIGHT}
-        options={{background: BACKGROUND_COLOR}}
-        loading={<Text text="Loading..." />}>
+        background={BACKGROUND_COLOR}
+        loading={<pixiText text="Loading..." />}>
         <DevTools />
         <Stats />
         <MemoryRouter>
@@ -31,7 +37,7 @@ export default function App() {
             <Route path="/game" element={<Game />} />
           </Routes>
         </MemoryRouter>
-      </Stage>
+      </Application>
     </>
   );
 }
