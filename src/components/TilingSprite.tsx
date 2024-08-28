@@ -1,11 +1,10 @@
 import {forwardRef} from 'react';
-import {useExtend} from '@pixi/react';
+import {useExtend, useSuspenseAssets} from '@pixi/react';
 import {Texture} from 'pixi.js';
 import {TilingSprite as PixiTilingSprite} from 'pixi.js';
 
 import ErrorBoundary from './ErrorBoundary';
 import SpriteFallback from './SpriteFallback';
-import {useAsset} from '../hooks/useAsset';
 
 import type {Ref} from 'react';
 
@@ -16,7 +15,7 @@ export type TilingSpriteProps = JSX.IntrinsicElements['tilingSprite'] & {
 
 const TilingSpriteFromImage = forwardRef(
   ({image, ...props}: TilingSpriteProps & {image: string}, ref: Ref<PixiTilingSprite>) => {
-    const texture = useAsset<Texture>(image);
+    const [texture] = useSuspenseAssets<Texture>([image]);
     return <tilingSprite ref={ref} texture={texture} {...props} />;
   },
 );

@@ -1,8 +1,7 @@
-import {useExtend, useTick} from '@pixi/react';
+import {useExtend, useSuspenseAssets, useTick} from '@pixi/react';
 import {Container} from 'pixi.js';
 
 import Bullet from './Bullet';
-import {useAsset} from '../hooks/useAsset';
 import {useGameState} from '../hooks/useGameState';
 import {HEIGHT, WIDTH} from '../lib/constants';
 
@@ -17,7 +16,7 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
 
   const bullets = useGameState(state => state.bullets);
 
-  const spriteSheet: Spritesheet = useAsset(atlas);
+  const [spriteSheet] = useSuspenseAssets<Spritesheet>([atlas]);
   const texture = spriteSheet.textures['bullet-1'];
 
   useTick(({deltaTime: delta}) => {

@@ -1,9 +1,8 @@
 import {forwardRef, useImperativeHandle, useRef} from 'react';
-import {useApplication, useTick} from '@pixi/react';
+import {useApplication, useSuspenseAssets, useTick} from '@pixi/react';
 import {Point} from 'pixi.js';
 
 import Sprite from './Sprite';
-import {useAsset} from '../hooks/useAsset';
 import {useGameState} from '../hooks/useGameState';
 import {useTickAction} from '../hooks/useTickAction';
 import {MOVEMENT_SPEED} from '../lib/constants';
@@ -25,7 +24,7 @@ const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, for
   const {app} = useApplication();
   const players = useGameState(state => state.players);
   const {bullets} = useGameState.getState();
-  const spriteSheet = useAsset<Spritesheet>(atlas);
+  const [spriteSheet] = useSuspenseAssets<Spritesheet>([atlas]);
 
   const player = players.actions.get(id);
   const sprite = spriteSheet.textures[texture];

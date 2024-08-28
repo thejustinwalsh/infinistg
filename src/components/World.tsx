@@ -1,9 +1,8 @@
 import {useEffect, useMemo, useRef} from 'react';
-import {useApplication, useExtend, useTick} from '@pixi/react';
+import {useApplication, useExtend, useSuspenseAssets, useTick} from '@pixi/react';
 import {Pool, Sprite} from 'pixi.js';
 import {Container} from 'pixi.js';
 
-import {useAsset} from '../hooks/useAsset';
 import {useGameState} from '../hooks/useGameState';
 import useTileset from '../hooks/useTileset';
 import {HEIGHT, WIDTH} from '../lib/constants';
@@ -25,7 +24,7 @@ export default function World({world: path, level}: WorldProps) {
   const {app} = useApplication();
   const world = useGameState.getState().world;
   const ref = useRef<Container>(null);
-  const worldData = useAsset<Ldtk>(path);
+  const [worldData] = useSuspenseAssets<Ldtk>([path]);
 
   const [tilesetUrls, tilesetFrames] = useMemo(() => {
     const data = worldData.defs.tilesets
