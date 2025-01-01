@@ -6,8 +6,10 @@ import {Container} from 'pixi.js';
 import {useGameState} from '../hooks/useGameState';
 import useTileset from '../hooks/useTileset';
 import {HEIGHT, WIDTH} from '../lib/constants';
+import {pattern} from '../lib/patterns';
 import {relativeTo, url} from '../lib/url-cache';
 
+import type {EnemyState} from '../hooks/useGameState';
 import type {EntityInstance, LayerInstance, Ldtk, TileInstance} from '../lib/ldtk';
 import type Tileset from '../lib/tileset';
 
@@ -22,6 +24,7 @@ export default function World({world: path, level}: WorldProps) {
   useExtend({Container});
 
   const {app} = useApplication();
+  const actions = useGameState(state => state.enemies.actions);
   const world = useGameState.getState().world;
   const ref = useRef<Container>(null);
   const [worldData] = useSuspenseAssets<Ldtk>([path]);
@@ -83,19 +86,21 @@ export default function World({world: path, level}: WorldProps) {
     );
 
     // Spawn entities as the row scrolls into view
-    spawned.current = new Map([
-      ...spawned.current,
-      ...spawnEntities(
-        nextLevel.layerInstances,
-        world.scroll,
-        e => !spawned.current.has(e.px[0] * nextLevel.pxHei + e.px[1]),
-      ).reduce((acc, e) => acc.set(e.px[0] * nextLevel.pxHei + e.px[1], e), new Map()),
-      ...spawnEntities(
-        currentLevel.layerInstances,
-        world.scroll,
-        e => !spawned.current.has(e.px[0] * currentLevel.pxHei + e.px[1]),
-      ).reduce((acc, e) => acc.set(e.px[0] * currentLevel.pxHei + e.px[1], e), new Map()),
-    ]);
+    // TODO: We only need to process the current row that is scrolling into view
+
+    spawnEntities(
+      nextLevel.layerInstances,
+      layer => world.scroll - layer.__cHei * layer.__gridSize,
+      e => !spawned.current.has(e.px[0] * nextLevel.pxHei + e.px[1]),
+      actions.add,
+    ).reduce((acc, e) => acc.set(e.px[0] * nextLevel.pxHei + e.px[1], e), spawned.current);
+
+    spawnEntities(
+      currentLevel.layerInstances,
+      () => world.scroll,
+      e => !spawned.current.has(e.px[0] * currentLevel.pxHei + e.px[1]),
+      actions.add,
+    ).reduce((acc, e) => acc.set(e.px[0] * currentLevel.pxHei + e.px[1], e), spawned.current);
 
     // Scroll to the next level when the current level is out of view
     if (world.scroll > currentLevel.pxHei) {
@@ -138,10 +143,11 @@ function renderTiles(
 
 function spawnEntities(
   layers: LayerInstance[] | null | undefined,
-  scroll: number,
-  filter?: (e: EntityInstance) => boolean,
+  scroll: (layer: LayerInstance) => number,
+  filter: (e: EntityInstance) => boolean,
+  spawner: (entity: EnemyState) => void,
 ) {
-  let spawned: EntityInstance[] = [];
+  const spawned: EntityInstance[] = [];
 
   layers
     ?.filter(l => l.__type === 'Entities')
@@ -149,11 +155,26 @@ function spawnEntities(
       const entities = layer.entityInstances;
       if (!entities) return;
 
-      spawned = spawned.concat(entities.filter(e => (filter?.(e) ?? true) && e.px[1] + scroll >= 0));
+      const s = scroll(layer);
+      spawned.push(...entities.filter(e => (filter?.(e) ?? true) && e.px[1] + s >= 0));
       spawned.forEach(entity => {
         const sprite = entity.fieldInstances.find(f => f.__identifier === 'Sprite')?.__value;
-        const pattern = entity.fieldInstances.find(f => f.__identifier === 'Pattern')?.__value;
-        console.log('Spawn @ ', {iid: entity.iid, px: entity.px.join(', '), sprite, pattern});
+        const p = pattern(entity.fieldInstances.find(f => f.__identifier === 'Pattern')?.__value);
+        spawner({
+          sprite,
+          pattern: p,
+          delta: 0,
+          sleep: 0,
+          pos: {x: entity.px[0], y: entity.px[1]},
+          radius: entity.width,
+          dir: {x: 0, y: 0},
+          scale: 1,
+          speed: 100,
+          timestamp: 0,
+          fireRate: 1,
+          health: 1,
+          maxHealth: 1,
+        });
       });
     });
 

@@ -2,6 +2,7 @@ import {useExtend} from '@pixi/react';
 import {Container, Point} from 'pixi.js';
 
 import BulletRunner from '../components/BulletRunner';
+import EnemyRunner from '../components/EnemyRunner';
 import Player from '../components/Player';
 import ScrollingTilingSprite from '../components/ScrollingTilingSprite';
 import World from '../components/World';
@@ -73,6 +74,7 @@ export default function Game() {
         <Player key={index} id={index} atlas="./assets/ships/atlas.json" texture={player.texture ?? 'ship-1'} />
       ))}
       <BulletRunner atlas="./assets/bullets/atlas.json" />
+      <EnemyRunner atlas="./assets/ships/atlas.json" />
     </container>
   );
 }
