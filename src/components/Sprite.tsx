@@ -9,14 +9,14 @@ import type {PixiElements} from '@pixi/react';
 import type {Texture} from 'pixi.js';
 import type {Ref} from 'react';
 
-export type SpriteProps = PixiElements['sprite'] & {
+export type SpriteProps = PixiElements['pixiSprite'] & {
   image?: string;
   texture?: Texture;
 };
 
 const SpriteFromImage = forwardRef(({image, ...props}: SpriteProps & {image: string}, ref: Ref<PixiSprite>) => {
   const [texture] = useSuspenseAssets<Texture>([image]);
-  return <sprite ref={ref} texture={texture} {...props} />;
+  return <pixiSprite ref={ref} texture={texture} {...props} />;
 });
 
 const Sprite = memo(
@@ -33,7 +33,7 @@ const Sprite = memo(
         {image ? (
           <SpriteFromImage ref={ref} image={image} {...props} />
         ) : (
-          <sprite ref={ref} texture={texture} {...props} />
+          <pixiSprite ref={ref} texture={texture} {...props} />
         )}
       </ErrorBoundary>
     );

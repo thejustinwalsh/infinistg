@@ -51,10 +51,10 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
   });
 
   return (
-    <container label="BulletRunner">
+    <pixiContainer label="BulletRunner">
       {bullets.actions.map(bullet => (
         <Bullet key={bullet.id} id={bullet.id ?? -1} texture={texture} />
       ))}
-    </container>
+    </pixiContainer>
   );
 }

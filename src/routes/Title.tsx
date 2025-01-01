@@ -52,7 +52,7 @@ export default function Title() {
   }, [players, navigate]);
 
   return (
-    <container label="Title" cursor="pointer" eventMode="static" onTouchEnd={handleClick} onClick={handleClick}>
+    <pixiContainer label="Title" cursor="pointer" eventMode="static" onTouchEnd={handleClick} onClick={handleClick}>
       <ScrollingTilingSprite
         label="Background"
         image={'./assets/backgrounds/bg-1.png'}
@@ -88,6 +88,6 @@ export default function Title() {
           })
         }
       />
-    </container>
+    </pixiContainer>
   );
 }

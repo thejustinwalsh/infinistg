@@ -23,5 +23,5 @@ export default function SpriteFallback({color = 0xef2b7c, width = 32, height = 3
     [color, height, width],
   );
 
-  return <graphics draw={fallback} />;
+  return <pixiGraphics draw={fallback} />;
 }

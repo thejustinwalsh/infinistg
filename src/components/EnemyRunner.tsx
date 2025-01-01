@@ -59,10 +59,10 @@ export default function EnemyRunner({atlas}: EnemyRunnerProps) {
   });
 
   return (
-    <container label="EnemyRunner">
+    <pixiContainer label="EnemyRunner">
       {enemies.actions.map(enemy => (
         <Enemy key={enemy.id} id={enemy.id ?? -1} texture={texture(enemy.sprite)} />
       ))}
-    </container>
+    </pixiContainer>
   );
 }

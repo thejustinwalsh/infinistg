@@ -9,7 +9,7 @@ import SpriteFallback from './SpriteFallback';
 import type {PixiElements} from '@pixi/react';
 import type {Ref} from 'react';
 
-export type TilingSpriteProps = PixiElements['tilingSprite'] & {
+export type TilingSpriteProps = PixiElements['pixiTilingSprite'] & {
   image?: string;
   texture?: Texture;
 };
@@ -17,7 +17,7 @@ export type TilingSpriteProps = PixiElements['tilingSprite'] & {
 const TilingSpriteFromImage = forwardRef(
   ({image, ...props}: TilingSpriteProps & {image: string}, ref: Ref<PixiTilingSprite>) => {
     const [texture] = useSuspenseAssets<Texture>([image]);
-    return <tilingSprite ref={ref} texture={texture} {...props} />;
+    return <pixiTilingSprite ref={ref} texture={texture} {...props} />;
   },
 );
 
@@ -33,7 +33,7 @@ const TilingSprite = forwardRef(function TilingSprite(
       {image ? (
         <TilingSpriteFromImage ref={ref} image={image} {...props} />
       ) : (
-        <tilingSprite ref={ref} texture={texture ?? Texture.EMPTY} {...props} />
+        <pixiTilingSprite ref={ref} texture={texture ?? Texture.EMPTY} {...props} />
       )}
     </ErrorBoundary>
   );

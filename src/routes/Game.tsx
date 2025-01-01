@@ -62,7 +62,7 @@ export default function Game() {
   });
 
   return (
-    <container label="Game">
+    <pixiContainer label="Game">
       <ScrollingTilingSprite
         label="Background"
         image={'./assets/backgrounds/bg-1.png'}
@@ -75,6 +75,6 @@ export default function Game() {
       ))}
       <BulletRunner atlas="./assets/bullets/atlas.json" />
       <EnemyRunner atlas="./assets/ships/atlas.json" />
-    </container>
+    </pixiContainer>
   );
 }

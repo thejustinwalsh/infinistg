@@ -110,7 +110,7 @@ export default function World({world: path, level}: WorldProps) {
     }
   });
 
-  return <container ref={ref} label={`World-${level}`} />;
+  return <pixiContainer ref={ref} label={`World-${level}`} />;
 }
 
 function renderTiles(
