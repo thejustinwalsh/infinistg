@@ -6,9 +6,10 @@ import {TilingSprite as PixiTilingSprite} from 'pixi.js';
 import ErrorBoundary from './ErrorBoundary';
 import SpriteFallback from './SpriteFallback';
 
+import type {PixiElements} from '@pixi/react';
 import type {Ref} from 'react';
 
-export type TilingSpriteProps = JSX.IntrinsicElements['tilingSprite'] & {
+export type TilingSpriteProps = PixiElements['tilingSprite'] & {
   image?: string;
   texture?: Texture;
 };

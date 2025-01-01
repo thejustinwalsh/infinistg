@@ -1,15 +1,15 @@
 import {forwardRef, memo, useImperativeHandle, useRef} from 'react';
 import {useExtend, useSuspenseAssets} from '@pixi/react';
-import type {} from '@pixi/react';
 import {Sprite as PixiSprite} from 'pixi.js';
 
 import ErrorBoundary from './ErrorBoundary';
 import SpriteFallback from './SpriteFallback';
 
+import type {PixiElements} from '@pixi/react';
 import type {Texture} from 'pixi.js';
 import type {Ref} from 'react';
 
-export type SpriteProps = JSX.IntrinsicElements['sprite'] & {
+export type SpriteProps = PixiElements['sprite'] & {
   image?: string;
   texture?: Texture;
 };
