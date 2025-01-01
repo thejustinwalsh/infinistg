@@ -1,5 +1,4 @@
-import {forwardRef, useImperativeHandle, useRef} from 'react';
-import {useTick} from '@pixi/react';
+import {forwardRef, memo, useEffect, useImperativeHandle, useRef} from 'react';
 
 import Sprite from './Sprite';
 import {useGameState} from '../hooks/useGameState';
@@ -14,18 +13,20 @@ type BulletProps = SpriteProps & {
   texture: Texture;
 };
 
-const Bullet = forwardRef(function Bullet({id, texture}: BulletProps, forwardedRef: Ref<PixiSprite>) {
-  const ref = useRef<PixiSprite>(null);
-  useImperativeHandle(forwardedRef, () => ref.current!, []);
+const Bullet = memo(
+  forwardRef(function Bullet({id, texture}: BulletProps, forwardedRef: Ref<PixiSprite>) {
+    const ref = useRef<PixiSprite>(null);
+    useImperativeHandle(forwardedRef, () => ref.current!, []);
 
-  const bullets = useGameState(state => state.bullets);
-  const bullet = bullets.actions.get(id);
+    const actions = useGameState(state => state.bullets.actions);
 
-  useTick(() => {
-    ref.current?.position.set(bullet.pos.x, bullet.pos.y);
-  });
+    useEffect(() => {
+      actions.bind(id, ref.current);
+      () => actions.unbind(id);
+    }, [actions, id]);
 
-  return <Sprite ref={ref} label={`Bullet-${id}`} anchor={0.5} x={bullet.pos.x} y={bullet.pos.y} texture={texture} />;
-});
+    return <Sprite ref={ref} label={`Bullet-${id}`} anchor={0.5} texture={texture} />;
+  }),
+);
 
 export default Bullet;

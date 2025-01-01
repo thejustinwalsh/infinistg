@@ -17,7 +17,7 @@ export default function EnemyRunner({atlas}: EnemyRunnerProps) {
   const enemies = useGameState(state => state.enemies);
 
   const [spriteSheet] = useSuspenseAssets<Spritesheet>([atlas]);
-  const texture = spriteSheet.textures['bullet-1'];
+  const texture = (sprite: string) => spriteSheet.textures[sprite] ?? spriteSheet.textures['ship-2'];
 
   useTick(({deltaTime: delta}) => {
     const pendingRemoval: number[] = [];
@@ -37,11 +37,15 @@ export default function EnemyRunner({atlas}: EnemyRunnerProps) {
       enemy.pos.x += enemy.speed * enemy.dir.x * delta;
       enemy.pos.y += enemy.speed * enemy.dir.y * delta;
 
+      if (enemy.ref?.parent) {
+        enemy.ref.position.set(enemy.pos.x, enemy.pos.y);
+      }
+
       if (
-        enemy.pos.x < -texture.width ||
-        enemy.pos.x > WIDTH + texture.width ||
-        enemy.pos.y < -texture.height ||
-        enemy.pos.y > HEIGHT + texture.height
+        enemy.pos.x < -enemy.radius ||
+        enemy.pos.x > WIDTH + enemy.radius ||
+        enemy.pos.y < -enemy.radius ||
+        enemy.pos.y > HEIGHT + enemy.radius
       ) {
         enemy.delta = enemy.timestamp = enemy.sleep = 0;
         enemy.generator = undefined;
@@ -57,7 +61,7 @@ export default function EnemyRunner({atlas}: EnemyRunnerProps) {
   return (
     <container label="EnemyRunner">
       {enemies.actions.map(enemy => (
-        <Enemy key={enemy.id} id={enemy.id ?? -1} texture={texture} x={enemy.pos.x} y={enemy.pos.y} />
+        <Enemy key={enemy.id} id={enemy.id ?? -1} texture={texture(enemy.sprite)} />
       ))}
     </container>
   );

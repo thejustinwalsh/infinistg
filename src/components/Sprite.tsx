@@ -1,4 +1,4 @@
-import {forwardRef, useImperativeHandle, useRef} from 'react';
+import {forwardRef, memo, useImperativeHandle, useRef} from 'react';
 import {useExtend, useSuspenseAssets} from '@pixi/react';
 import type {} from '@pixi/react';
 import {Sprite as PixiSprite} from 'pixi.js';
@@ -19,23 +19,25 @@ const SpriteFromImage = forwardRef(({image, ...props}: SpriteProps & {image: str
   return <sprite ref={ref} texture={texture} {...props} />;
 });
 
-const Sprite = forwardRef(function Sprite({image, texture, ...props}: SpriteProps, forwardedRef: Ref<PixiSprite>) {
-  useExtend({Sprite: PixiSprite});
+const Sprite = memo(
+  forwardRef(function Sprite({image, texture, ...props}: SpriteProps, forwardedRef: Ref<PixiSprite>) {
+    useExtend({Sprite: PixiSprite});
 
-  const ref = useRef<PixiSprite>(null);
-  useImperativeHandle(forwardedRef, () => ref.current!, []);
+    const ref = useRef<PixiSprite>(null);
+    useImperativeHandle(forwardedRef, () => ref.current!, []);
 
-  const {width, height} = props;
+    const {width, height} = props;
 
-  return (
-    <ErrorBoundary fallback={<SpriteFallback width={width} height={height} />}>
-      {image ? (
-        <SpriteFromImage ref={ref} image={image} {...props} />
-      ) : (
-        <sprite ref={ref} texture={texture} {...props} />
-      )}
-    </ErrorBoundary>
-  );
-});
+    return (
+      <ErrorBoundary fallback={<SpriteFallback width={width} height={height} />}>
+        {image ? (
+          <SpriteFromImage ref={ref} image={image} {...props} />
+        ) : (
+          <sprite ref={ref} texture={texture} {...props} />
+        )}
+      </ErrorBoundary>
+    );
+  }),
+);
 
 export default Sprite;

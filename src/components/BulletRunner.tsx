@@ -29,6 +29,10 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
       bullet.pos.y += bullet.speed * Math.sin(bullet.dir - Math.PI / 2) * delta;
       bullet.delta += delta;
 
+      if (bullet.ref?.parent) {
+        bullet.ref.position.set(bullet.pos.x, bullet.pos.y);
+      }
+
       if (
         bullet.delta > bullet.lifetime ||
         bullet.pos.x < -texture.width ||
@@ -49,7 +53,7 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
   return (
     <container label="BulletRunner">
       {bullets.actions.map(bullet => (
-        <Bullet key={bullet.id} id={bullet.id ?? -1} texture={texture} x={bullet.pos.x} y={bullet.pos.y} />
+        <Bullet key={bullet.id} id={bullet.id ?? -1} texture={texture} />
       ))}
     </container>
   );

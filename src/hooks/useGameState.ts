@@ -3,6 +3,7 @@ import {create} from 'zustand';
 import {HEIGHT, WIDTH} from '../lib/constants';
 
 import type {Pattern, PatternGenerator} from '../lib/patterns';
+import type {Container} from 'pixi.js';
 
 const MAX_PLAYERS = 4;
 const MAX_ENEMIES = 100;
@@ -17,6 +18,8 @@ export type StatePool<T> = {
   actions: {
     add: (entity: T) => void;
     remove: (index: number) => void;
+    bind: (id: number, ref?: SceneObjectRef) => void;
+    unbind: (id: number) => void;
     get: (index: number) => T;
     map: <U>(fn: (entity: T, index: number) => U) => U[];
   };
@@ -33,11 +36,14 @@ export type CollisionEntityKey = {
   id: number;
 };
 
+export type SceneObjectRef<T extends Container = Container> = T | null;
+
 export type SceneObjectState = {
   id?: number;
   pos: {x: number; y: number};
   radius: number;
   texture?: string;
+  ref?: SceneObjectRef;
 };
 
 export type EntityState = SceneObjectState & {
@@ -101,6 +107,8 @@ export const useGameState = create<GameState>((set, get) => ({
         set(state => ({...state, players: {...state.players, count: addTo(state.players, entity)}})),
       remove: (entity: number | EntityState) =>
         set(state => ({...state, players: {...state.players, count: removeFrom(state.players, entity)}})),
+      bind: (id: number, ref?: SceneObjectRef) => bindFrom(get().players, id, ref),
+      unbind: (id: number) => unbindFrom(get().players, id),
       get: (index: number) => getFrom(get().players, index),
       map: <U>(fn: (entity: EntityState, index: number) => U) => mapFrom(get().players, fn),
     },
@@ -125,6 +133,8 @@ export const useGameState = create<GameState>((set, get) => ({
         set(state => ({...state, enemies: {...state.enemies, count: addTo(state.enemies, entity)}})),
       remove: (entity: number | EnemyState) =>
         set(state => ({...state, enemies: {...state.enemies, count: removeFrom(state.enemies, entity)}})),
+      bind: (id: number, ref?: SceneObjectRef) => bindFrom(get().enemies, id, ref),
+      unbind: (id: number) => unbindFrom(get().enemies, id),
       get: (index: number) => getFrom(get().enemies, index),
       map: <U>(fn: (entity: EnemyState, index: number) => U) => mapFrom(get().enemies, fn),
     },
@@ -158,6 +168,8 @@ export const useGameState = create<GameState>((set, get) => ({
         set(state => ({...state, bullets: {...state.bullets, count: addTo(state.bullets, entity)}})),
       remove: (entity: number | BulletState) =>
         set(state => ({...state, bullets: {...state.bullets, count: removeFrom(state.bullets, entity)}})),
+      bind: (id: number, ref?: SceneObjectRef) => bindFrom(get().bullets, id, ref),
+      unbind: (id: number) => unbindFrom(get().bullets, id),
       get: (index: number) => getFrom(get().bullets, index),
       map: <U>(fn: (entity: BulletState, index: number) => U) => mapFrom(get().bullets, fn),
     },
@@ -226,6 +238,20 @@ function getFrom<T extends SceneObjectState>(state: StatePool<T>, id: number): T
   if (id < 0 || id >= state.pool.entities.length) throw new Error(`Invalid id (${id}) - last: ${state.count}`);
 
   return state.pool.entities[id];
+}
+
+function bindFrom<T extends SceneObjectState>(state: StatePool<T>, id: number, ref?: SceneObjectRef) {
+  if (id < 0 || id >= state.pool.entities.length) throw new Error(`Invalid id (${id}) - last: ${state.count}`);
+
+  const entity = state.pool.entities[id];
+  if (ref) entity.ref = ref;
+}
+
+function unbindFrom<T extends SceneObjectState>(state: StatePool<T>, id: number) {
+  if (id < 0 || id >= state.pool.entities.length) throw new Error(`Invalid id (${id}) - last: ${state.count}`);
+
+  const entity = state.pool.entities[id];
+  entity.ref = null;
 }
 
 function reset(state: GameState) {

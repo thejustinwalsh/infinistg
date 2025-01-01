@@ -1,5 +1,4 @@
-import {forwardRef, useImperativeHandle, useRef} from 'react';
-import {useTick} from '@pixi/react';
+import {forwardRef, memo, useEffect, useImperativeHandle, useRef} from 'react';
 
 import Sprite from './Sprite';
 import {useGameState} from '../hooks/useGameState';
@@ -13,18 +12,20 @@ type EnemyProps = SpriteProps & {
   texture: Texture;
 };
 
-const Enemy = forwardRef(function Enemy({id, texture}: EnemyProps, forwardedRef: Ref<PixiSprite>) {
-  const ref = useRef<PixiSprite>(null);
-  useImperativeHandle(forwardedRef, () => ref.current!, []);
+const Enemy = memo(
+  forwardRef(function Enemy({id, texture}: EnemyProps, forwardedRef: Ref<PixiSprite>) {
+    const ref = useRef<PixiSprite>(null);
+    useImperativeHandle(forwardedRef, () => ref.current!, []);
 
-  const enemies = useGameState(state => state.bullets);
-  const enemy = enemies.actions.get(id);
+    const actions = useGameState(state => state.enemies.actions);
 
-  useTick(() => {
-    ref.current?.position.set(enemy.pos.x, enemy.pos.y);
-  });
+    useEffect(() => {
+      actions.bind(id, ref.current);
+      () => actions.unbind(id);
+    }, [actions, id]);
 
-  return <Sprite ref={ref} label={`Enemy-${id}`} anchor={0.5} x={enemy.pos.x} y={enemy.pos.y} texture={texture} />;
-});
+    return <Sprite ref={ref} label={`Enemy-${id}`} anchor={0.5} rotation={Math.PI} texture={texture} />;
+  }),
+);
 
 export default Enemy;
