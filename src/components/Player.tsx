@@ -1,4 +1,4 @@
-import {forwardRef, useImperativeHandle, useRef} from 'react';
+import {useImperativeHandle, useRef} from 'react';
 import {useApplication, useSuspenseAssets, useTick} from '@pixi/react';
 import {Point} from 'pixi.js';
 
@@ -9,7 +9,6 @@ import {MOVEMENT_SPEED} from '../lib/constants';
 
 import type {SpriteProps} from './Sprite';
 import type {Sprite as PixiSprite, Spritesheet} from 'pixi.js';
-import type {Ref} from 'react';
 
 type PlayerProps = Omit<SpriteProps, 'texture'> & {
   id: number;
@@ -17,16 +16,16 @@ type PlayerProps = Omit<SpriteProps, 'texture'> & {
   texture: string;
 };
 
-const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, forwardedRef: Ref<PixiSprite>) {
+export default function Player({id, atlas, texture, ref: parentRef}: PlayerProps) {
   const ref = useRef<PixiSprite>(null);
-  useImperativeHandle(forwardedRef, () => ref.current!, []);
+  useImperativeHandle(parentRef, () => ref.current!, []);
 
   const {app} = useApplication();
-  const players = useGameState(state => state.players);
-  const {bullets} = useGameState.getState();
+  const playerActions = useGameState(state => state.players.actions);
+  const bulletActions = useGameState(state => state.bullets.actions);
   const [spriteSheet] = useSuspenseAssets<Spritesheet>([atlas]);
 
-  const player = players.actions.get(id);
+  const player = playerActions.get(id);
   const sprite = spriteSheet.textures[texture];
   const scale = 1.5;
 
@@ -55,7 +54,7 @@ const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, for
 
   // Fire bullets
   useTickAction(player.fireRate, () => {
-    bullets.actions.add({
+    bulletActions.add({
       pos: {x: player.pos.x, y: player.pos.y},
       dir: 0,
       radius: 4,
@@ -77,6 +76,4 @@ const Player = forwardRef(function Player({id, atlas, texture}: PlayerProps, for
       texture={sprite}
     />
   );
-});
-
-export default Player;
+}

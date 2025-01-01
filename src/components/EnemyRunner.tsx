@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import {useExtend, useSuspenseAssets, useTick} from '@pixi/react';
 import {Container} from 'pixi.js';
 
@@ -12,10 +13,10 @@ type EnemyRunnerProps = {
 };
 
 export default function EnemyRunner({atlas}: EnemyRunnerProps) {
+  'use no memo';
   useExtend({Container});
 
   const enemies = useGameState(state => state.enemies);
-
   const [spriteSheet] = useSuspenseAssets<Spritesheet>([atlas]);
   const texture = (sprite: string) => spriteSheet.textures[sprite] ?? spriteSheet.textures['ship-2'];
 

@@ -3,7 +3,7 @@ import {useApplication, useExtend, useSuspenseAssets, useTick} from '@pixi/react
 import {Pool, Sprite} from 'pixi.js';
 import {Container} from 'pixi.js';
 
-import {useGameState} from '../hooks/useGameState';
+import {getGameState, useGameState} from '../hooks/useGameState';
 import useTileset from '../hooks/useTileset';
 import {HEIGHT, WIDTH} from '../lib/constants';
 import {pattern} from '../lib/patterns';
@@ -25,7 +25,7 @@ export default function World({world: path, level}: WorldProps) {
 
   const {app} = useApplication();
   const actions = useGameState(state => state.enemies.actions);
-  const world = useGameState.getState().world;
+  const world = getGameState(state => state.world);
   const ref = useRef<Container>(null);
   const [worldData] = useSuspenseAssets<Ldtk>([path]);
 
@@ -68,7 +68,7 @@ export default function World({world: path, level}: WorldProps) {
     // Render the next level's tiles starting at the top of the viewport and ending at the scroll position
     renderTiles(
       nextLevel.layerInstances,
-      tilesets,
+      tilesets.current,
       tilesetUrls,
       ref,
       layer => world.scroll - layer.__cHei * layer.__gridSize,
@@ -78,7 +78,7 @@ export default function World({world: path, level}: WorldProps) {
     // Render the tiles for the current level starting at the scroll position and ending at the last tile in the viewport
     renderTiles(
       currentLevel.layerInstances,
-      tilesets,
+      tilesets.current,
       tilesetUrls,
       ref,
       () => world.scroll,

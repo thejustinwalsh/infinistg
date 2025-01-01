@@ -34,5 +34,5 @@ export default function useTileset(urls: string | string[], frames: TileSetFrame
     tileset.current = new Tileset(loadedFrames);
   }, [loadedFrames]);
 
-  return tileset.current;
+  return tileset;
 }

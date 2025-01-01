@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler */
 import {useExtend, useSuspenseAssets, useTick} from '@pixi/react';
 import {Container} from 'pixi.js';
 
@@ -12,6 +13,7 @@ type BulletRunnerProps = {
 };
 
 export default function BulletRunner({atlas}: BulletRunnerProps) {
+  'use no memo';
   useExtend({Container});
 
   const bullets = useGameState(state => state.bullets);
@@ -24,6 +26,7 @@ export default function BulletRunner({atlas}: BulletRunnerProps) {
 
     for (let i = 0; i < bullets.count; i++) {
       const id = bullets.pool.activeEntities[i];
+
       const bullet = bullets.pool.entities[bullets.pool.activeEntities[i]];
       bullet.pos.x += bullet.speed * Math.cos(bullet.dir - Math.PI / 2) * delta;
       bullet.pos.y += bullet.speed * Math.sin(bullet.dir - Math.PI / 2) * delta;

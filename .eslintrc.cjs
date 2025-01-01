@@ -1,6 +1,6 @@
 module.exports = {
   root: true,
-  env: { browser: true, es2020: true },
+  env: {browser: true, es2020: true},
   extends: [
     'eslint:recommended',
     'prettier',
@@ -9,12 +9,10 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['import', 'react-refresh'],
+  plugins: ['import', 'react-refresh', 'react-compiler'],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ],
+    'react-compiler/react-compiler': 'error',
+    'react-refresh/only-export-components': ['warn', {allowConstantExport: true}],
     'no-void': ['error', {allowAsStatement: true}],
     'react-native/no-inline-styles': 'off',
     '@typescript-eslint/consistent-type-imports': 'error',
@@ -28,12 +26,7 @@ module.exports = {
     'import/order': [
       'error',
       {
-        groups: [
-          ['builtin', 'external'],
-          ['internal', 'sibling', 'parent', 'index'],
-          ['object', 'unknown'],
-          'type',
-        ],
+        groups: [['builtin', 'external'], ['internal', 'sibling', 'parent', 'index'], ['object', 'unknown'], 'type'],
         pathGroups: [
           {
             pattern: 'react*',
@@ -56,4 +49,4 @@ module.exports = {
       },
     ],
   },
-}
+};

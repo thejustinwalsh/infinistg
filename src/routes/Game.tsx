@@ -6,7 +6,7 @@ import EnemyRunner from '../components/EnemyRunner';
 import Player from '../components/Player';
 import ScrollingTilingSprite from '../components/ScrollingTilingSprite';
 import World from '../components/World';
-import {useGameState} from '../hooks/useGameState';
+import {getGameState} from '../hooks/useGameState';
 import {TickGroup, useTickGroup} from '../hooks/useTickGroup';
 import SpatialHash from '../lib/spatial-hash';
 
@@ -17,7 +17,7 @@ const spatialHash = SpatialHash<{pool: string; id: number; x: number; y: number;
 export default function Game() {
   useExtend({Container});
 
-  const {players, enemies, bullets, collision} = useGameState.getState();
+  const {players, enemies, bullets, collision} = getGameState(state => state);
 
   useTickGroup(TickGroup.POST_TICK, () => {
     const collisions: CollisionPairs = [];

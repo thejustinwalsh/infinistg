@@ -1,4 +1,3 @@
-import {forwardRef} from 'react';
 import {useExtend, useSuspenseAssets} from '@pixi/react';
 import {Texture} from 'pixi.js';
 import {TilingSprite as PixiTilingSprite} from 'pixi.js';
@@ -7,24 +6,18 @@ import ErrorBoundary from './ErrorBoundary';
 import SpriteFallback from './SpriteFallback';
 
 import type {PixiElements} from '@pixi/react';
-import type {Ref} from 'react';
 
 export type TilingSpriteProps = PixiElements['pixiTilingSprite'] & {
   image?: string;
   texture?: Texture;
 };
 
-const TilingSpriteFromImage = forwardRef(
-  ({image, ...props}: TilingSpriteProps & {image: string}, ref: Ref<PixiTilingSprite>) => {
-    const [texture] = useSuspenseAssets<Texture>([image]);
-    return <pixiTilingSprite ref={ref} texture={texture} {...props} />;
-  },
-);
+function TilingSpriteFromImage({image, ref, ...props}: TilingSpriteProps & {image: string}) {
+  const [texture] = useSuspenseAssets<Texture>([image]);
+  return <pixiTilingSprite ref={ref} texture={texture} {...props} />;
+}
 
-const TilingSprite = forwardRef(function TilingSprite(
-  {image, texture, ...props}: TilingSpriteProps,
-  ref: Ref<PixiTilingSprite>,
-) {
+export default function TilingSprite({image, texture, ref, ...props}: TilingSpriteProps) {
   useExtend({TilingSprite: PixiTilingSprite});
 
   const {width, height} = props;
@@ -37,6 +30,4 @@ const TilingSprite = forwardRef(function TilingSprite(
       )}
     </ErrorBoundary>
   );
-});
-
-export default TilingSprite;
+}
